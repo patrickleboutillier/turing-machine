@@ -1,4 +1,4 @@
-module Turing.Machine (newTM) where
+module Turing.Machine (newTM, runTM) where
 
 
 import Turing.Base

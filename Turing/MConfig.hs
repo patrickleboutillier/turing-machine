@@ -69,18 +69,31 @@ data Behaviour = Behaviour [Operation] MConfig
 instance Show Behaviour where 
   show (Behaviour ops (MConfig name _)) = show ops ++ "\t-> " ++ name
 
-data MCH = None [Operation] MConfig -- | SSAny | SSSym Symbol | SSNot Symbol | SSOneOf [Symbol] | SSNotOneOf [Symbol]
+-- Helper data structure to create m-configurations. Syntactic sugar...
+data MCH = Blank [Operation] MConfig |
+           None [Operation] MConfig |
+           Any [Operation] MConfig |
+           Sym Symbol [Operation] MConfig | 
+           Not Symbol [Operation] MConfig | 
+           OneOf [Symbol] [Operation] MConfig | 
+           NotOneOf [Symbol] [Operation] MConfig
 
 -- Helper function to create m-configurations
 mConfig :: String -> [MCH] -> MConfig
 mConfig name = MConfig name . map mCH2MConfig
-  where mCH2MConfig (None ops fmc) = (SSNone, Behaviour ops fmc)
+  where mCH2MConfig (Blank ops fmc) = (SSBlank, Behaviour ops fmc)
+        mCH2MConfig (None ops fmc) = (SSNone, Behaviour ops fmc)
+        mCH2MConfig (Any ops fmc) = (SSAny, Behaviour ops fmc)
+        mCH2MConfig (Sym s ops fmc) = (SSSym s, Behaviour ops fmc)
+        mCH2MConfig (Not s ops fmc) = (SSNot s, Behaviour ops fmc)
+        mCH2MConfig (OneOf ss ops fmc) = (SSOneOf ss, Behaviour ops fmc)
+        mCH2MConfig (NotOneOf ss ops fmc) = (SSNotOneOf ss, Behaviour ops fmc)
 (==>) name mchs = mConfig name mchs
 
---mFunction :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
---mFunction n params = mConfig (n ++ named params)
---mF :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
---mF = mFunction 
+mFunction :: (Named a) => String -> a -> [MCH] -> MConfig
+mFunction n params = mConfig (n ++ named params)
+mF :: (Named a) => String -> a -> [MCH] -> MConfig
+mF = mFunction 
 
 traverseMConfigs :: (MConfig -> a) -> MConfig -> [a]
 traverseMConfigs f = reverse . map snd . traverse [] f 

@@ -1,4 +1,4 @@
-module TAT81p1 where
+module TAT81p1 (m) where
 
 import Turing.Base
 import Turing.MConfig
