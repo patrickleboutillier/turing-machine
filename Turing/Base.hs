@@ -1,4 +1,4 @@
-module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), normalizeOperations, Tape(Tape)) where
+module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), normalizeOperations, Tape(Tape), showTapeWith, blankTape, readSymbol, apply) where
 
 
 -- A symbol is what can be printed on the tape of a Turing machine. 

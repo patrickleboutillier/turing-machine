@@ -1,8 +1,5 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
 
-
-module Turing.MConfig (MCH(..), (==>), asTable) where
+module Turing.MConfig (SymbolSpec, matches, MConfig(..), Behaviour(..), MCH(..), (==>), asTable) where
 
 
 import Turing.Base
