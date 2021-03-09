@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 
-module Turing.MConfig (SymbolSpec(..), mC, asTable) where
+module Turing.MConfig (MCH(..), (==>), asTable) where
 
 
 import Turing.Base
@@ -29,33 +29,33 @@ instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, 
 
 
 -- A SymbolSpec is used to define rules to match a symbol.
-data SymbolSpec = Blank | None | Any | Sym Symbol | Not Symbol | OneOf [Symbol] | NotOneOf [Symbol]
+data SymbolSpec = SSBlank | SSNone | SSAny | SSSym Symbol | SSNot Symbol | SSOneOf [Symbol] | SSNotOneOf [Symbol]
 instance Show SymbolSpec where 
-  show Blank = "(.*)"
-  show None = "( )"
-  show Any = "(.+)"
-  show (Sym s) = "(" ++ s ++ ")"
-  show (Not s) = "!(" ++ s ++ ")"
-  show (OneOf cs) = "(" ++ (concat . intersperse "|" $ cs) ++ ")"
-  show (NotOneOf cs) = "!(" ++ (concat . intersperse "|" $ cs) ++ ")"
+  show SSBlank = "(.*)"
+  show SSNone = "( )"
+  show SSAny = "(.+)"
+  show (SSSym s) = "(" ++ s ++ ")"
+  show (SSNot s) = "!(" ++ s ++ ")"
+  show (SSOneOf cs) = "(" ++ (concat . intersperse "|" $ cs) ++ ")"
+  show (SSNotOneOf cs) = "!(" ++ (concat . intersperse "|" $ cs) ++ ")"
 
 matches :: SymbolSpec -> Symbol -> Bool
-matches (Blank) s = True
-matches (None) s = s == blankSym
-matches (Any) s = not $ s == blankSym
-matches (Sym c) s = s == c
-matches (Not c) s = (not $ s == blankSym) && (not $ s == c)
-matches (OneOf cs) s = or . map (== s) $ cs
-matches (NotOneOf cs) s = (not $ s == blankSym) && (not . or . map (== s) $ cs)
+matches (SSBlank) s = True
+matches (SSNone) s = s == blankSym
+matches (SSAny) s = not $ s == blankSym
+matches (SSSym c) s = s == c
+matches (SSNot c) s = (not $ s == blankSym) && (not $ s == c)
+matches (SSOneOf cs) s = or . map (== s) $ cs
+matches (SSNotOneOf cs) s = (not $ s == blankSym) && (not . or . map (== s) $ cs)
 
 -- Expand the given SymbolSpec to a list of Sym specs.
 normalizeSpec :: Domain -> SymbolSpec -> [SymbolSpec]
-normalizeSpec ss Blank = map Sym ss
-normalizeSpec ss Any = map Sym . delete blankSym $ ss
-normalizeSpec ss (Sym s) = [Sym s]
-normalizeSpec ss (Not s) | s `elem` ss = map Sym . delete blankSym . delete s $ ss
-                         | otherwise =  map Sym . delete blankSym $ ss
-normalizeSpec ss (OneOf cs) = map Sym cs
+normalizeSpec ss SSBlank = map SSSym ss
+normalizeSpec ss SSAny = map SSSym . delete blankSym $ ss
+normalizeSpec ss (SSSym s) = [SSSym s]
+normalizeSpec ss (SSNot s) | s `elem` ss = map SSSym . delete blankSym . delete s $ ss
+                         | otherwise =  map SSSym . delete blankSym $ ss
+normalizeSpec ss (SSOneOf cs) = map SSSym cs
 
 
 -- An MConfig is made up of 2 parts: the SymbolSpec and the Behaviour
@@ -66,21 +66,24 @@ instance Show MConfig where
   showList (m:ms) = shows m . ("\n" ++) . showList ms
   showList [] = id
 instance Named MConfig where 
-    named (MConfig n _) = n
+  named (MConfig n _) = n
 
 data Behaviour = Behaviour [Operation] MConfig
 instance Show Behaviour where 
-    show (Behaviour ops (MConfig name _)) = show ops ++ "\t-> " ++ name
+  show (Behaviour ops (MConfig name _)) = show ops ++ "\t-> " ++ name
+
+data MCH = None [Operation] MConfig -- | SSAny | SSSym Symbol | SSNot Symbol | SSOneOf [Symbol] | SSNotOneOf [Symbol]
 
 -- Helper function to create m-configurations
-mConfig :: String -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
-mConfig name = MConfig name . map (\(sspec, ops, next) -> (sspec, Behaviour ops next))
-mC = mConfig
+mConfig :: String -> [MCH] -> MConfig
+mConfig name = MConfig name . map mCH2MConfig
+  where mCH2MConfig (None ops fmc) = (SSNone, Behaviour ops fmc)
+(==>) name mchs = mConfig name mchs
 
-mFunction :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
-mFunction n params = mConfig (n ++ named params)
-mF :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
-mF = mFunction 
+--mFunction :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
+--mFunction n params = mConfig (n ++ named params)
+--mF :: (Named a) => String -> a -> [(SymbolSpec, [Operation], MConfig)] -> MConfig
+--mF = mFunction 
 
 traverseMConfigs :: (MConfig -> a) -> MConfig -> [a]
 traverseMConfigs f = reverse . map snd . traverse [] f 
@@ -99,10 +102,10 @@ normalizeMConfigSpecs dom = step
 -- been applied before!
 normalizeMConfigOps :: MConfig -> MConfig
 normalizeMConfigOps = step
-    where step (MConfig name cbs) = MConfig name . map (\(sspec@(Sym s), Behaviour ops fmc) -> (sspec, splitBehaviour name sspec . Behaviour ops $ step fmc)) $ cbs
+    where step (MConfig name cbs) = MConfig name . map (\(sspec@(SSSym s), Behaviour ops fmc) -> (sspec, splitBehaviour name sspec . Behaviour ops $ step fmc)) $ cbs
 
 splitBehaviour :: String -> SymbolSpec -> Behaviour -> Behaviour
-splitBehaviour name sspec@(Sym s) (Behaviour ops fmc) = (\(MConfig name cbs) -> snd . head $ cbs) . foldr (\ops m -> MConfig (nname ops) [(sspec, (Behaviour ops m))]) fmc $ ns
+splitBehaviour name sspec@(SSSym s) (Behaviour ops fmc) = (\(MConfig name cbs) -> snd . head $ cbs) . foldr (\ops m -> MConfig (nname ops) [(sspec, (Behaviour ops m))]) fmc $ ns
     where ns = normalizeOperations s ops 
           nname ops = name ++ show sspec ++ show ops
 
@@ -118,7 +121,7 @@ normalizeNames m = step m
 -- Replaces all name with the standard notation. normalizeMConfigSpecs and normalizeMConfigOps must have been applied before!
 normalizeSymbols :: Domain -> MConfig -> MConfig
 normalizeSymbols dom m = step m
-    where step (MConfig name cbs) = MConfig name . map (\(Sym s, Behaviour (P c:o:[]) fmc) -> (Sym (ns s), Behaviour [P . ns $ c, o] $ step fmc)) $ cbs
+    where step (MConfig name cbs) = MConfig name . map (\(SSSym s, Behaviour (P c:o:[]) fmc) -> (SSSym (ns s), Behaviour [P . ns $ c, o] $ step fmc)) $ cbs
           smap = zip dom $ map (\n -> "S" ++ show n) [0..]
           ns s = fromJust . lookup s $ smap
 
@@ -127,7 +130,7 @@ normalizeMConfig dom m = normalizeSymbols dom . normalizeNames . normalizeMConfi
 
 standardForm :: Domain -> MConfig -> String
 standardForm dom = concat . map sf . asTable . normalizeMConfig dom
-    where sf (MConfig name [(Sym s, Behaviour (P c:o:[]) (MConfig name' _))]) = name ++ s ++ c ++ show o ++
+    where sf (MConfig name [(SSSym s, Behaviour (P c:o:[]) (MConfig name' _))]) = name ++ s ++ c ++ show o ++
                                                                                   name' ++ ";" 
 
 standardDesc :: Domain -> MConfig -> String

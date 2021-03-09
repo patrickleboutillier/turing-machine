@@ -6,7 +6,7 @@ import Turing.MConfig
 
 
 -- This machine 
-b = mC "b" [(None,    [P "0", R], c)]
-c = mC "c" [(None,    [R],        e)]
-e = mC "e" [(None,    [P "1", R], f)]
-f = mC "f" [(None,    [R],        b)]
+b = "b" ==> [None    [P "0", R]    c]
+c = "c" ==> [None    [R]           e]
+e = "e" ==> [None    [P "1", R]    f]
+f = "f" ==> [None    [R]           b]
