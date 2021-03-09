@@ -1,5 +1,9 @@
 
-module Turing.MConfig (SymbolSpec, matches, MConfig(..), Behaviour(..), MCH(..), (==>), asTable) where
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+
+module Turing.MConfig (SymbolSpec, matches, MConfig(..), Behaviour(..), MCH(..), (==>), mF, asTable,
+  standardTape) where
 
 
 import Turing.Base
@@ -24,6 +28,8 @@ instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, 
   named (a, b, c, d, e, f) = "(" ++ named a ++ "," ++ named b ++ "," ++ named c ++ "," 
     ++ named d ++ "," ++ named e ++ "," ++ named f ++ ")"
 
+instance Named Symbol where 
+  named s = s
 
 -- A SymbolSpec is used to define rules to match a symbol.
 data SymbolSpec = SSBlank | SSNone | SSAny | SSSym Symbol | SSNot Symbol | SSOneOf [Symbol] | SSNotOneOf [Symbol]
@@ -48,6 +54,7 @@ matches (SSNotOneOf cs) s = (not $ s == blankSym) && (not . or . map (== s) $ cs
 -- Expand the given SymbolSpec to a list of Sym specs.
 normalizeSpec :: Domain -> SymbolSpec -> [SymbolSpec]
 normalizeSpec ss SSBlank = map SSSym ss
+normalizeSpec ss SSNone = [SSSym blankSym]
 normalizeSpec ss SSAny = map SSSym . delete blankSym $ ss
 normalizeSpec ss (SSSym s) = [SSSym s]
 normalizeSpec ss (SSNot s) | s `elem` ss = map SSSym . delete blankSym . delete s $ ss

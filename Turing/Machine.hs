@@ -1,4 +1,4 @@
-module Turing.Machine (newTM, runTM) where
+module Turing.Machine (newTM, newTMM, stepTM, runTM, Machine(..)) where
 
 
 import Turing.Base
@@ -6,12 +6,16 @@ import Turing.MConfig
 
 
 -- The actual machine!
-data Machine = Machine Tape MConfig 
+data Machine = Machine Domain Tape MConfig 
 
 instance Show Machine where 
-    show (Machine tape (MConfig name _)) = showTapeWith ("", '/' : name ++ "") tape
+    show (Machine dom tape (MConfig name _)) = showTapeWith ("", '/' : name ++ "") tape
 
-newTM mconfig = Machine blankTape mconfig
+newTM :: Domain -> MConfig -> Machine
+newTM dom mc = Machine dom blankTape mc
+
+newTMM :: Domain -> MConfig -> Machine -> Machine
+newTMM dom mc (Machine dom' tape mc') = Machine dom (standardTape dom' mc') mc
 
 findNextMConfig :: Symbol -> MConfig -> ([Operation], MConfig)
 findNextMConfig s (MConfig name cbs) = fmb s cbs
@@ -20,9 +24,9 @@ findNextMConfig s (MConfig name cbs) = fmb s cbs
                                                       | otherwise = fmb s cbs
 
 move :: Machine -> Machine
-move (Machine tape mconfig) = Machine nextTape nextMConfig
+move (Machine dom tape mc) = Machine dom nextTape nextmc
     where sym = readSymbol tape
-          (ops, nextMConfig) = findNextMConfig sym mconfig
+          (ops, nextmc) = findNextMConfig sym mc
           nextTape = foldl (\acc o -> apply o acc) tape ops
 
 moves :: Machine -> [Machine]
