@@ -1,4 +1,4 @@
-module Turing.StdForm () where
+module Turing.StdForm (toStandardTape, asTable) where
 
 
 import Turing.Base

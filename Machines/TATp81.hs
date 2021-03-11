@@ -1,7 +1,7 @@
 module TATp81 where
 
 import Turing.MConfig
--- import Turing.Machine
+import Turing.Machine
 
 -- This machine implements the machine that computes the value 1/3, i.e. alternating
 -- 0s and 1s.
@@ -14,4 +14,4 @@ e = "e" ==> [None    [P "1", R]      f]
 f = "f" ==> [None    [R]             b]
 
 
--- m = newTM dom mc b
+m = newTM dom b

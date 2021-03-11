@@ -1,4 +1,5 @@
-module Turing.MConfig ((==>), asList, MCH(..), MConfig(..), Behaviour(..), Turing.Base.Symbol, Turing.Base.Domain, Turing.Base.Operation(..)) where
+module Turing.MConfig ((==>), asList, MCH(..), MConfig(..), Behaviour(..), 
+  Turing.Base.Symbol, Turing.Base.matches, Turing.Base.Domain, Turing.Base.Operation(..)) where
 
 
 import Turing.Base

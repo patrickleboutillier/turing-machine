@@ -1,4 +1,4 @@
-module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
+module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), matches, normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
 
 import Data.List 
 
