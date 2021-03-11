@@ -1,17 +1,55 @@
-module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), normalizeOperations, Tape(Tape), showTapeWith, blankTape, readSymbol, apply) where
+module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
 
+import Data.List 
 
--- A symbol is what can be printed on the tape of a Turing machine. 
--- We use a string because sometime a symbol can use more than one character.
+-- A symbol is what can be printed on/scanned from the tape of a Turing machine.
+-- We use a string because sometimes a symbol can use more than one character (i.e. '::'
+-- Also, having a string will be handy when we work on normalizing the Symbols, as this 
+-- is done using generic names like S0, S1, S2, ...
 type Symbol = String
 
--- A Domain is the list of all characters that can be read encountered a machine. 
+-- A Domain is the list of all characters that can be encountered by a machine. 
 -- It is not specificaly mentionned in the paper/book, but there are many cases 
--- where we need to know 
+-- where we need to have this information handy (i.e. when we encounter symbol 
+-- specifications like Blank, Any, ...  
 type Domain = [Symbol]
 
--- What we use to represent a tape square that was nothing on it. 
+-- What we use to represent a tape square that was nothing on it, simply a space character. 
 blankSym = " " 
+
+
+-- A SymbolSpec is used to define rules to match a symbol.
+data SymbolSpec = Blank | None | Any | Sym Symbol | Not Symbol | OneOf [Symbol] | NotOneOf [Symbol]
+instance Show SymbolSpec where 
+  show Blank = "(.*)"
+  show None = "' '"
+  show Any = "(.+)"
+  show (Sym s) = "'" ++ s ++ "'"
+  show (Not s) = "!'" ++ s ++ "'"
+  show (OneOf cs) = "('" ++ (concat . intersperse "'|'" $ cs) ++ "')"
+  show (NotOneOf cs) = "!('" ++ (concat . intersperse "'|'" $ cs) ++ "')"
+
+-- Returns true is the SymbolSpec matches the given Symbol. 
+matches :: SymbolSpec -> Symbol -> Bool
+matches (Blank) s = True
+matches (None) s = s == blankSym
+matches (Any) s = not $ s == blankSym
+matches (Sym c) s = s == c
+matches (Not c) s = (not $ s == blankSym) && (not $ s == c)
+matches (OneOf cs) s = or . map (== s) $ cs
+matches (NotOneOf cs) s = (not $ s == blankSym) && (not . or . map (== s) $ cs)
+
+-- Normalizes a SymbolSpec to list of SymbolSpec matching only one specific character (i.e. Sym s).
+-- To do this may require the machines Domain, for example to expand Any into the list of all possible
+-- symbols used in the machine. 
+normalizeSpec :: Domain -> SymbolSpec -> [SymbolSpec]
+normalizeSpec ss Blank = map Sym ss
+normalizeSpec ss None = [Sym blankSym]
+normalizeSpec ss Any = map Sym . delete blankSym $ ss
+normalizeSpec ss (Sym s) = [Sym s]
+normalizeSpec ss (Not s) = map Sym . delete blankSym . delete s $ ss
+normalizeSpec ss (OneOf cs) = map Sym cs
+normalizeSpec ss (NotOneOf cs) = map Sym . delete blankSym $ ss \\ cs
 
 
 -- Our tape. Squares to the left, the current square, squares to the right.
@@ -44,8 +82,8 @@ printSymbol sym (Tape ls h rs) = Tape ls sym rs
 eraseSymbol :: Tape -> Tape
 eraseSymbol = printSymbol blankSym
 
-readSymbol :: Tape -> Symbol 
-readSymbol (Tape _ h _) = h
+scanSymbol :: Tape -> Symbol 
+scanSymbol (Tape _ h _) = h
 
 
 -- The different tape operations that can be used in m-configurations 
@@ -62,10 +100,10 @@ apply N = id
 
 -- Breaks up a list of operations into one of the normal forms described in TAT page 134.
 -- This implies that the m-config line in question has already been normalized to matching 
--- only one Symbol, and therefore the matched Symbol can be passed as a parameter.
-normalizeOperations :: Symbol -> [Operation] -> [[Operation]]
-normalizeOperations s [] = [[P s, N]]
-normalizeOperations s xs = normOps s xs
+-- only one Symbol (see normalizeSpec), and therefore the matched Symbol can be passed as a parameter.
+normalizeOps :: Symbol -> [Operation] -> [[Operation]]
+normalizeOps s [] = [[P s, N]]
+normalizeOps s xs = normOps s xs
   where normOps s [] = []   
         normOps s (E:ops) = normOps s (P blankSym:ops)
         normOps s (L:ops) = [P s, L] : normOps s ops
