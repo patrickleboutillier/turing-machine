@@ -87,27 +87,24 @@ g1'2 d x@(mC, a)    = "g1'2"%x  ==>     [Sym a          []          $ mC,
 pe2 d x@(mC, a, b)  = "pe2"%x   ==>     [Blank          []          $ pe d (pe d (mC, b), a)]
 
 
-{--
 --page 125
-ce2 d x@(mB, a, b)          = "ce2"%x ==>[Blank     []          $ ce'2 d (ce'2 d (mB, b), a)]
-ce3 d x@(mB, a, b, y)       = "ce3"%x ==>[Blank     []          $ ce'2 d (ce2 d (mB, b, y), a)]
-ce4 d x@(mB, a, b, y, o)    = "ce4"%x ==>[Blank     []          $ ce'2 d (ce3 d (mB, b, y, o), a)]
-ce5 d x@(mB, a, b, y, o, e) = "ce5"%x ==>[Blank     []          $ ce'2 d (ce4 d (mB, b, y, o, e), a)]
+ce2 d x@(mB, a, b)          = "ce2"%x ==>   [Blank     []          $ ce'2 d (ce'2 d (mB, b), a)]
+ce3 d x@(mB, a, b, y)       = "ce3"%x ==>   [Blank     []          $ ce'2 d (ce2 d (mB, b, y), a)]
+ce4 d x@(mB, a, b, y, o)    = "ce4"%x ==>   [Blank     []          $ ce'2 d (ce3 d (mB, b, y, o), a)]
+ce5 d x@(mB, a, b, y, o, e) = "ce5"%x ==>   [Blank     []          $ ce'2 d (ce4 d (mB, b, y, o, e), a)]
 
-e'1  d x@(mC) = "e'1" %x ==>             [Sym "e"   [R]         $ e1'1 d mC,
-                                          Not "e"   [L]         $ e'1 d mC,
-                                          None      [L]         $ e'1 d mC]
-e1'1 d x@(mC) = "e1'1"%x ==>             [Any       [R, E, R]   $ e1'1 d mC,
-                                          None      []          $ mC]
+e'1  d x@(mC)               = "e'1" %x ==>  [Sym "e"   [R]         $ e1'1 d mC,
+                                             Not "e"   [L]         $ e'1 d mC,
+                                             None      [L]         $ e'1 d mC]
+e1'1 d x@(mC)               = "e1'1"%x ==>  [Any       [R, E, R]   $ e1'1 d mC,
+                                             None      []          $ mC]
 
 
 -- page 152
-con  d x@(mC, a) = "con" %x ==>          [Not "A"   [R, R]                    $ con  d (mC, a),
-                                          Sym "A"   [L, P a, R]               $ con1 d (mC, a)]
-con1 d x@(mC, a) = "con1"%x ==>          [Sym "A"   [R, P a, R]               $ con1 d (mC, a),
-                                          Sym "D"   [R, P a, R]               $ con2 d (mC, a),
-                                          None      [P "D", R, P a, R, R, R]  $ mC]
-con2 d x@(mC, a) = "con2"%x ==>          [Sym "C"   [R, P a, R]               $ con2 d (mC, a),
-                                          Not "C"   [R, R]                    $ mC]
-
---}
+con  d x@(mC, a) = "con"  %x ==>    [Not "A"    [R, R]                    $ con  d (mC, a),
+                                     Sym "A"    [L, P a, R]               $ con1 d (mC, a)]
+con1 d x@(mC, a) = "con1" %x ==>    [Sym "A"    [R, P a, R]               $ con1 d (mC, a),
+                                     Sym "D"    [R, P a, R]               $ con2 d (mC, a),
+                                     None       [P "D", R, P a, R, R, R]  $ mC]
+con2 d x@(mC, a) = "con2" %x ==>    [Sym "C"    [R, P a, R]               $ con2 d (mC, a),
+                                     Not "C"    [R, R]                    $ mC]

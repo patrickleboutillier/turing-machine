@@ -1,4 +1,4 @@
-module TATp81 where
+module Machines.TATp81 where
 
 import Turing.MConfig
 import Turing.Machine
@@ -12,6 +12,5 @@ b = "b" ==> [None    [P "0", R]      c]
 c = "c" ==> [None    [R]             e]
 e = "e" ==> [None    [P "1", R]      f]
 f = "f" ==> [None    [R]             b]
-
 
 m = newTM dom b

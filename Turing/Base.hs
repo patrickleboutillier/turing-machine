@@ -61,9 +61,10 @@ instance Show Tape where
 
 -- Allows to show a Tape with custom delimiters.
 showTapeWith :: (String, String) -> Tape -> String
-showTapeWith (b, a) (Tape ls h rs) = (p ls) ++ (b ++ h ++ a) ++ (p rs) ++ "|"
-  where p [] = "|"  
-        p cs = concat . map (\x -> "|" ++ x) $ cs 
+showTapeWith (b, a) (Tape ls h rs) = "[" ++ (concat . intersperse "|" $ ls ++ [b++h++a] ++ rs) ++ "]"
+ -- (p ls) ++ (b ++ h ++ a) ++ (p rs) ++ "|"
+  --where p [] = "|"  
+  --      p cs = concat . map (\x -> "|" ++ x) $ cs 
 
 -- A blank tape
 blankTape = Tape [] blankSym []

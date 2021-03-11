@@ -1,5 +1,5 @@
 module Turing.MConfig ((==>), asList, MCH(..), MConfig(..), Behaviour(..), 
-  Turing.Base.Symbol, Turing.Base.matches, Turing.Base.Domain, Turing.Base.Operation(..)) where
+  Turing.Base.Symbol, Turing.Base.blankSym, Turing.Base.matches, Turing.Base.Domain, Turing.Base.Operation(..)) where
 
 
 import Turing.Base
@@ -14,8 +14,6 @@ instance Show MConfig where
         where showcb (sspec, b) = (show sspec) ++ "\t-> " ++ (show b)
     showList (m:ms) = shows m . ("\n" ++) . showList ms
     showList [] = id
---instance Named MConfig where 
---    named (MConfig n _) = n
 
 data Behaviour = Behaviour [Operation] MConfig
 instance Show Behaviour where 
@@ -40,11 +38,3 @@ asList = reverse . map snd . traverse []
     where traverse :: [(String, MConfig)] -> MConfig -> [(String, MConfig)]
           traverse seen m@(MConfig name cbs) | isJust . lookup name $ seen = seen  
                                              | otherwise = foldl (\acc (sspec, Behaviour ops fmc) -> traverse acc fmc) ((name, m):seen) cbs
-
-
-dom = [" ", "0", "1"]
-
-b = "b" ==> [Turing.MConfig.None    [P "0", R]      c]
-c = "c" ==> [Turing.MConfig.None    [R]             e]
-e = "e" ==> [Turing.MConfig.None    [P "1", R]      f]
-f = "f" ==> [Turing.MConfig.None    [R]             b]

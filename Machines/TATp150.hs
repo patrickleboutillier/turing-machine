@@ -1,6 +1,5 @@
 module Machines.TATp150 where
 
-import Turing.Base
 import Turing.MConfig
 import Turing.Machine
 
