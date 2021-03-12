@@ -29,7 +29,7 @@ instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, 
 
 
 (%) :: (Named a) => String -> a -> String
-(%) f x = f ++ show (name x)
+(%) f x = f ++ (name x)
 
 
 f  d x@(mC, mB, a) = "f"%x ==> [Sym "e"        [L]         $ f d (mC, mB, a),
