@@ -42,7 +42,25 @@ sim3 = "sim3"   ==> [Not "A"              [L, P "y"]            $ e'2 dom (mf, "
                      Sym "A"              [L, P "y", R, R, R]   $ sim3]
 
 
-mf = undefined               
+mf = "mf" ==> [Blank []     $ g'2 dom (mf, ":")]
+mf1 = "mf1" ==> [Not "A"    [R, R]  $ mf1,
+                 Sym "A"    [L, L, L, L]        $ mf2]
+
+mf2 = "mf2" ==> [Sym "C"    [R, P "x", L, L, L] $ mf2,
+                 Sym ":"    []                  $ mf4,
+                 Sym "D"    [R, P "x", L, L, L] $ mf3]
+
+mf3 = "mf3" ==> [Not ":"    [R, P "v", L, L, L]    $ mf3,
+                 Sym ":"     []                    $ mf4] 
+
+mf4 = "mf4" ==> [Blank      []                  $ con (l (l (mf5)), " ")]
+
+mf5 = "mf5" ==> [Any        [R, P "w", R]       $ mf5,
+                 None       [P ":"]             $ sh]
+
+
+sh = undefined
+                         
 
 
 {--

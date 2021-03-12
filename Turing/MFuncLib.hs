@@ -37,11 +37,11 @@ pe1 d x@(mC, b) = "pe1"%x ==> [Any      [R, R]      $ pe1 d (mC, b),
 
 
 -- page 121
-l d x@(mC)          = "l"%x   ==>   [Blank          [L]         $ mC]
-r d x@(mC)          = "r"%x   ==>   [Blank          [R]         $ mC]
+l x@(mC)            = "l"%x   ==>   [Blank          [L]         $ mC]
+r x@(mC)            = "r"%x   ==>   [Blank          [R]         $ mC]
 
-f'  d x@(mC, mB, a) = "f'"%x  ==>   [Blank          []          $ f d (l d mC, mB, a)] 
-f'' d x@(mC, mB, a) = "f''"%x ==>   [Blank          []          $ f d (r d mC, mB, a)] 
+f'  d x@(mC, mB, a) = "f'"%x  ==>   [Blank          []          $ f d (l mC, mB, a)] 
+f'' d x@(mC, mB, a) = "f''"%x ==>   [Blank          []          $ f d (r mC, mB, a)] 
 
 c  d x@(mC, mB, a)  = "c"%x   ==>   [Blank          []          $ f' d (c1 d mC, mB, a)]
 c1 d x@(mC)         = "c1"%x  ==> map f d
