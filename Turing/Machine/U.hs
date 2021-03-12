@@ -40,25 +40,25 @@ sim1 = "sim1"   ==> [Blank          []                      $ con (sim2, blankSy
 sim2 = "sim2"   ==> [Sym "A"        []                      $ sim3,
                      Not "A"        [L, P "u", R, R, R]     $ sim2]           
 
-sim3 = "sim3"   ==> [Not "A"        [L, P "y"]              $ e'2 dom (mf, "z"),
+sim3 = "sim3"   ==> [Not "A"        [L, P "y"]              $ e'2 dom (mk, "z"),
                      Sym "A"        [L, P "y", R, R, R]     $ sim3]
 
 
 -- page 157
-mf  = "mf"      ==> [Blank          []                      $ g'2 dom (mf, ":")]
-mf1 = "mf1"     ==> [Not "A"        [R, R]                  $ mf1,
-                     Sym "A"        [L, L, L, L]            $ mf2]
+mk  = "mk"      ==> [Blank          []                      $ g'2 dom (mk1, ":")]
+mk1 = "mk1"     ==> [Not "A"        [R, R]                  $ mk1,
+                     Sym "A"        [L, L, L, L]            $ mk2]
 
-mf2 = "mf2"     ==> [Sym "C"        [R, P "x", L, L, L]     $ mf2,
-                     Sym ":"        []                      $ mf4,
-                     Sym "D"        [R, P "x", L, L, L]     $ mf3]
+mk2 = "mk2"     ==> [Sym "C"        [R, P "x", L, L, L]     $ mk2,
+                     Sym ":"        []                      $ mk4,
+                     Sym "D"        [R, P "x", L, L, L]     $ mk3]
 
-mf3 = "mf3"     ==> [Not ":"        [R, P "v", L, L, L]     $ mf3,
-                     Sym ":"        []                      $ mf4] 
+mk3 = "mk3"     ==> [Not ":"        [R, P "v", L, L, L]     $ mk3,
+                     Sym ":"        []                      $ mk4] 
 
-mf4 = "mf4"     ==> [Blank          []                      $ con (l (l (mf5)), " ")]
+mk4 = "mk4"     ==> [Blank          []                      $ con (l (l (mk5)), " ")]
 
-mf5 = "mf5"     ==> [Any            [R, P "w", R]           $ mf5,
+mk5 = "mk5"     ==> [Any            [R, P "w", R]           $ mk5,
                      None           [P ":"]                 $ sh]
 
 
