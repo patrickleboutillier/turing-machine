@@ -1,4 +1,4 @@
-module Turing.MFuncLib (f, g, g'2, e'1, e'2, e'3, pe, l, r, f', f'', c, ce'2, ce'3, 
+module Turing.MFuncLib (f, g, g'2, e'1, e'2, e'3, pe, pe2, l, r, f', f'', c, ce'2, ce'3, 
     re'3, re'4, cr'2, cr'3, cp, cpe'4, cpe'5, ce2, ce3, ce4, ce5, con) where
 
 

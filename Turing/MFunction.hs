@@ -29,8 +29,10 @@ instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, 
 
 
 (%) :: (Named a) => String -> a -> String
-(%) f x = f ++ (name x)
-
+(%) f x = f ++ pp
+    where n  = name x
+          pp | head n == '(' = n
+             | otherwise = "(" ++ n ++ ")"
 
 f  d x@(mC, mB, a) = "f"%x ==> [Sym "e"        [L]         $ f d (mC, mB, a),
                                 Not "e"        [L]         $ f d (mC, mB, a),
