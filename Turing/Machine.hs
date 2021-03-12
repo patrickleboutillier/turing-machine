@@ -1,4 +1,4 @@
-module Turing.Machine (newTM, newTMM, stepTM, runTM, Machine(..)) where
+module Turing.Machine (moves, newTM, newTMM, stepTM, runTM, runTMWith, Machine(..)) where
 
 
 import Turing.Base
@@ -34,7 +34,10 @@ moves :: Machine -> [Machine]
 moves tm = tm : moves (move tm)
 
 stepTM :: Int -> Machine -> IO ()
-stepTM n tm = sequence_ . take n . map (\(m, n) -> print m) $ zip (moves tm) [0..]
+stepTM n tm = sequence_ . take n . map print $ moves tm
 
 runTM :: Int -> Machine -> IO ()
 runTM n = print . last . take n . moves
+
+runTMWith :: Int -> (Char -> Bool) -> Machine -> IO ()
+runTMWith n f = putStrLn . filter f . show . last . take n . moves

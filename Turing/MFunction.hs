@@ -11,7 +11,7 @@ class Named a where
     name :: a -> String
 
 instance Named Symbol where 
-    name = id
+    name s = "'" ++ s ++ "'"
 instance Named MConfig where 
     name (MConfig n _) = n
 
@@ -20,7 +20,7 @@ instance (Named a, Named b) => Named (a, b) where
 instance (Named a, Named b, Named c) => Named (a, b, c) where
     name (a, b, c) = "(" ++ name a ++ "," ++ name b ++ "," ++ name c ++ ")"
 instance (Named a, Named b, Named c, Named d) => Named (a, b, c, d) where
-    name (a, b, c, d) = "(" ++ name a ++ "," ++ name b ++ "," ++ name c ++ "," ++ name d ++" )"
+    name (a, b, c, d) = "(" ++ name a ++ "," ++ name b ++ "," ++ name c ++ "," ++ name d ++")"
 instance (Named a, Named b, Named c, Named d, Named e) => Named (a, b, c, d, e) where
     name (a, b, c, d, e) = "(" ++ name a ++ "," ++ name b ++ "," ++ name c ++ "," ++ name d ++ "," ++ name e ++ ")"
 instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, c, d, e, f) where

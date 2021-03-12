@@ -24,7 +24,7 @@ anf1 = "anf1"   ==> [Blank          []                      $ con (kom, "y")]
 
 kom  = "kom"    ==> [Sym ";"        [R, P "z", L]           $ con (kmp, "x"),
                      Sym "z"        [L, L]                  $ kom,
-                     Sym "e"        []                      $ error "fail: machine is not well constructed",
+                  -- Sym "e"        []                      $ error "fail: machine is not well constructed",
                      NotOneOf [";", 
                         "z", "e"]   [L]                     $ kom,
                      None           [L]                     $ kom]
@@ -34,7 +34,7 @@ kmp = "kmp"     ==> [Blank          []                      $ cpe'4 dom (e'2 dom
 
 
 -- page 156
-sim  = "sim"    ==> [Blank          []                      $ f' dom (sim1, sim1, "z" )]
+sim  = "sim"    ==> [Blank          []                      $ f' dom (sim1, sim1, "z")]
 sim1 = "sim1"   ==> [Blank          []                      $ con (sim2, blankSym)]
 
 sim2 = "sim2"   ==> [Sym "A"        []                      $ sim3,
@@ -65,7 +65,7 @@ mk5 = "mk5"     ==> [Any            [R, P "w", R]           $ mk5,
 -- page 159
 sh  = "sh"      ==> [Blank          []                      $ f (sh1, inst, "u")]
 sh1 = "sh1"     ==> [Blank          [L, L, L]               $ sh2]
-sh2 = "sh2"     ==> [Sym "D"        [R, R, R, R]            $ sh2,
+sh2 = "sh2"     ==> [Sym "D"        [R, R, R, R]            $ sh3,
                      Not "D"        []                      $ inst]
 sh3 = "sh3"     ==> [Sym "C"        [R, R]                  $ sh4,
                      Not "C"        []                      $ inst]                        
@@ -74,7 +74,6 @@ sh4 = "sh4"     ==> [Sym "C"        [R, R]                  $ sh5,
 sh5 = "sh5"     ==> [Sym "C"        []                      $ inst,
                      Not "C"        []                      $ pe2 dom (inst, "1", ":")]  
                  
-
 -- page 160
 inst  = "inst"  ==> [Blank          []                      $ g'2 dom (l (inst1), "u")]
 
