@@ -63,7 +63,7 @@ mf5 = "mf5"     ==> [Any            [R, P "w", R]           $ mf5,
 
 
 -- page 159
-sh = "sh"       ==> [Blank          []                      $ f (sh1, inst, "u")]
+sh  = "sh"      ==> [Blank          []                      $ f (sh1, inst, "u")]
 sh1 = "sh1"     ==> [Blank          [L, L, L]               $ sh2]
 sh2 = "sh2"     ==> [Sym "D"        [R, R, R, R]            $ sh2,
                      Not "D"        []                      $ inst]
@@ -76,13 +76,13 @@ sh5 = "sh5"     ==> [Sym "C"        []                      $ inst,
                  
 
 -- page 160
-inst = "inst"   ==> [Blank          []                      $ g'2 dom (l (inst1), "u")]
+inst  = "inst"  ==> [Blank          []                      $ g'2 dom (l (inst1), "u")]
 
 inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 dom (ov, "v", "y", "x", "u", "w"),
                      Sym "R"        [R, E]                  $ ce5 dom (ov, "v", "x", "u", "y", "w"),
                      Sym "N"        [R, E]                  $ ce5 dom (ov, "v", "x", "y", "u", "w")]
                      
-ov = "ov"       ==> [Blank          []                      $ e'1 dom (anf)]
+ov    = "ov"    ==> [Blank          []                      $ e'1 dom (anf)]
 
 
 
