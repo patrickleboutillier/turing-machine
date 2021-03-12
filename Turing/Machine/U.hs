@@ -60,8 +60,22 @@ mf5 = "mf5"     ==> [Any        [R, P "w", R]           $ mf5,
                      None       [P ":"]                 $ sh]
 
 
-sh = undefined
-                         
+-- page 159
+sh = "sh" ==>   [Blank      []                $ f (sh1, inst, "u")]
+sh1 = "sh1" ==> [Blank      [L, L, L]         $ sh2]
+sh2 = "sh2" ==> [Sym "D"    [R, R, R, R]      $ sh2,
+                 Not "D"    []                $ inst]
+sh3 = "sh3" ==> [Sym "C"    [R, R]            $ sh4,
+                 Not "C"    []                $ inst]                        
+sh4 = "sh4" ==> [Sym "C"    [R, R]            $ sh5,
+                 Not "C"    []                $ pe2 d (inst, "0", ":")]  
+sh5 = "sh5" ==> [Sym "C"    []                $ inst,
+                 Not "C"    []                $ pe2 d (inst, "1", ":")]  
+                 
+                 
+inst = undefined
+
+
 
 
 {--
