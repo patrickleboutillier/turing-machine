@@ -72,8 +72,15 @@ sh4 = "sh4" ==> [Sym "C"    [R, R]            $ sh5,
 sh5 = "sh5" ==> [Sym "C"    []                $ inst,
                  Not "C"    []                $ pe2 d (inst, "1", ":")]  
                  
-                 
-inst = undefined
+
+-- page 160
+inst = "inst" ==> [Blank    []                $ g'2 d (l (inst1), "u")]
+
+inst1 = "inst1" ==> [Sym "L"  [R, E]          $ ce'5 d (ov, "v", "y", "x", "u", "w"),
+                     Sym "R"  [R, E]          $ ce'5 d (ov, "v", "x", "u", "y", "w"),
+                     Sym "N"  [R, E]          $ ce'5 d (ov, "v", "x", "y", "u", "w")]
+                     
+ov = "ov" ==> [Blank  []        $ e'2 (anf)
 
 
 
