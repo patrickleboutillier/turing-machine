@@ -12,26 +12,26 @@ import Turing.MFunction
 
 
 -- page 115
-f  d x@(mC, mB, a) = "f"%x  ==> [Sym "e"    [L]     $ f1 d (mC, mB, a),
-                                 Not "e"    [L]     $ f  d (mC, mB, a),
-                                 None       [L]     $ f  d (mC, mB, a)]
-f1 d x@(mC, mB, a) = "f1"%x ==> [Sym a      []      $ mC,
-                                 Not a      [R]     $ f1 d (mC, mB, a),
-                                 None       [R]     $ f2 d (mC, mB, a)]
-f2 d x@(mC, mB, a) = "f2"%x ==> [Sym a      []      $ mC,
-                                 Not a      [R]     $ f1 d (mC, mB, a),
-                                 None       [R]     $ mB]
+f  x@(mC, mB, a) = "f"%x  ==> [Sym "e"    [L]     $ f1 (mC, mB, a),
+                               Not "e"    [L]     $ f  (mC, mB, a),
+                               None       [L]     $ f  (mC, mB, a)]
+f1 x@(mC, mB, a) = "f1"%x ==> [Sym a      []      $ mC,
+                               Not a      [R]     $ f1 (mC, mB, a),
+                               None       [R]     $ f2 (mC, mB, a)]
+f2 x@(mC, mB, a) = "f2"%x ==> [Sym a      []      $ mC,
+                               Not a      [R]     $ f1 (mC, mB, a),
+                               None       [R]     $ mB]
 
 
 -- page 118
-e'3  d x@(mC, mB, a) = "e'3"%x  ==> [Blank      []      $ f d (e1'3 d (mC, mB, a), mB, a)]
+e'3  d x@(mC, mB, a) = "e'3"%x  ==> [Blank      []      $ f (e1'3 d (mC, mB, a), mB, a)]
 e1'3 d x@(mC, mB, a) = "e1'3"%x ==> [Blank      [E]     $ mC]
 
 e'2  d x@(mB, a)     = "e'2"%x  ==> [Blank      []      $ e'3 d (e'2 d (mB, a), mB, a)]
 
 
 -- page 120
-pe  d x@(mC, b) = "pe"%x  ==> [Blank    []          $ f d (pe1 d (mC, b), mC, "e")]
+pe  d x@(mC, b) = "pe"%x  ==> [Blank    []          $ f (pe1 d (mC, b), mC, "e")]
 pe1 d x@(mC, b) = "pe1"%x ==> [Any      [R, R]      $ pe1 d (mC, b),
                                None     [P b]       $ mC]
 
@@ -40,8 +40,8 @@ pe1 d x@(mC, b) = "pe1"%x ==> [Any      [R, R]      $ pe1 d (mC, b),
 l x@(mC)            = "l"%x   ==>   [Blank          [L]         $ mC]
 r x@(mC)            = "r"%x   ==>   [Blank          [R]         $ mC]
 
-f'  d x@(mC, mB, a) = "f'"%x  ==>   [Blank          []          $ f d (l mC, mB, a)] 
-f'' d x@(mC, mB, a) = "f''"%x ==>   [Blank          []          $ f d (r mC, mB, a)] 
+f'  d x@(mC, mB, a) = "f'"%x  ==>   [Blank          []          $ f (l mC, mB, a)] 
+f'' d x@(mC, mB, a) = "f''"%x ==>   [Blank          []          $ f (r mC, mB, a)] 
 
 c  d x@(mC, mB, a)  = "c"%x   ==>   [Blank          []          $ f' d (c1 d mC, mB, a)]
 c1 d x@(mC)         = "c1"%x  ==> map f d
@@ -52,7 +52,7 @@ c1 d x@(mC)         = "c1"%x  ==> map f d
 ce'3 d x@(mC, mB, a)     = "ce'3"%x  ==>    [Blank     []          $ c d (e'3 d (mC, mB, a), mB, a)] 
 ce'2 d x@(mB, a)         = "ce'2"%x  ==>    [Blank     []          $ ce'3 d (ce'2 d (mB, a), mB, a)]
 
-re'4  d x@(mC, mB, a, b) = "re'4" %x ==>    [Blank     []          $ f d (re1'4 d (mC, mB, a, b), mB, a)]
+re'4  d x@(mC, mB, a, b) = "re'4" %x ==>    [Blank     []          $ f (re1'4 d (mC, mB, a, b), mB, a)]
 re1'4 d x@(mC, mB, a, b) = "re1'4"%x ==>    [Blank     [E, P b]    $ mC]
 
 re'3 d x@(mB, a, b)      = "re'3" %x ==>    [Blank     []          $ re'4 d (re'3 d (mB, a, b), mB, a, b)]
@@ -62,7 +62,7 @@ re'3 d x@(mB, a, b)      = "re'3" %x ==>    [Blank     []          $ re'4 d (re'
 cr'3 d x@(mC, mB, a)         = "cr'3"%x ==>     [Blank      []  $ c d (re'4 d (mC, mB, a, a), mB, a)] 
 cr'2 d x@(mB, a)             = "cr'2"%x ==>     [Blank      []  $ cr'3 d (cr'2 d (mB, a), re'3 d (mB, a, a), a)]
 
-cp  d x@(mC, mU, mE, a, b)   = "cp" %x  ==>     [Blank      []  $ f' d (cp1 d (mC, mU, b), f d (mU, mE, b), a)]
+cp  d x@(mC, mU, mE, a, b)   = "cp" %x  ==>     [Blank      []  $ f' d (cp1 d (mC, mU, b), f (mU, mE, b), a)]
 cp1 d x@(mC, mU, b)          = "cp1"%x  ==> map f d 
     where f y =                                  Sym y      []  $ f' d (cp2 d (mC, mU, y), mU, b)
 cp2 d x@(mC, mU, y)          = "cp2"%x  ==>     [Sym y      []  $ mC,
