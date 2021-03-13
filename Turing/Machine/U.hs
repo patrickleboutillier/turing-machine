@@ -6,12 +6,8 @@ import Turing.MFuncLib
 import Turing.Machine
 
 
--- The domain for universal Turing machines, page 151
-dom = [" ", "0", "1", "D", "A", "C", "u", "v", "w", "x", "y", "z", ":", "L", "R", "N", ";", "::", "e"]
-
-
 u :: Machine -> Machine
-u m = newTMM dom b m
+u m = newTMM b m
 
 
 -- page 152
