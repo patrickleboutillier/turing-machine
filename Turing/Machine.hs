@@ -19,6 +19,7 @@ newTMM dom mc (Machine dom' tape mc') = Machine dom (toStandardTape tbl) mc
     where tbl = asTable dom' mc'
 
 findNextMConfig :: Symbol -> MConfig -> ([Operation], MConfig)
+--findNextMConfig s (DynMConfig f) = findNextMConfig s $ f s
 findNextMConfig s (MConfig name cbs) = fmb s cbs
     where fmb s [] = error $ "Incomplete machine configuration: can't find match for symbol \"" ++ s ++ "\" in " ++ name ++ "!"
           fmb s (cb@((sspec, Behaviour ops fmc)):cbs) | sspec `matches` s = (ops, fmc) 

@@ -12,7 +12,7 @@ class Named a where
 
 instance Named Symbol where 
     name s = "'" ++ s ++ "'"
-instance Named MConfig where 
+instance Named MConfig where
     name (MConfig n _) = n
 
 instance (Named a, Named b) => Named (a, b) where

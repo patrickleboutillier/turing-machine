@@ -1,4 +1,4 @@
-module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), matches, getSymbolSpecSymbols, 
+module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), getOpsSymbols, SymbolSpec(..), matches, getSymbolSpecSymbols, 
   normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
 
 import Data.List 
@@ -117,3 +117,8 @@ normalizeOps s xs = normOps s xs
         normOps s (P c:L:ops) = [P c, L] : normOps s ops
         normOps s (P c:R:ops) = [P c, R] : normOps s ops
         normOps s (P c:ops) = [P c, N] : normOps s ops
+
+getOpsSymbols :: [Operation] -> [Symbol]
+getOpsSymbols = concat . map gos
+  where gos (P s) = [s] 
+        gos _ = []

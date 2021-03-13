@@ -1,6 +1,7 @@
 module Turing.Machine.U (u) where
 
 import Turing.MConfig
+import Turing.MFunction
 import Turing.MFuncLib
 import Turing.Machine
 
@@ -11,6 +12,17 @@ dom = [" ", "0", "1", "D", "A", "C", "u", "v", "w", "x", "y", "z", ":", "L", "R"
 
 u :: Machine -> Machine
 u m = newTMM dom b m
+
+
+-- page 152
+con  x@(mC, a) = "con"  %x ==>    [Not "A"    [R, R]                    $ con  (mC, a),
+                                   Sym "A"    [L, P a, R]               $ con1 (mC, a)]
+con1 x@(mC, a) = "con1" %x ==>    [Sym "A"    [R, P a, R]               $ con1 (mC, a),
+                                   Sym "D"    [R, P a, R]               $ con2 (mC, a),
+                                   None       [P "D", R, P a, R, R, R]  $ mC]
+con2 x@(mC, a) = "con2" %x ==>    [Sym "C"    [R, P a, R]               $ con2 (mC, a),
+                                   Not "C"    [R, R]                    $ mC,
+                                   None       [R, R]                    $ mC]
 
 
 -- page 153
@@ -30,7 +42,7 @@ kom  = "kom"    ==> [Sym ";"        [R, P "z", L]           $ con (kmp, "x"),
                      None           [L]                     $ kom]
 
 -- page 155
-kmp = "kmp"     ==> [Blank          []                      $ cpe'4 dom (e'2 (e'2 (anf, "x"), "y"), sim, "x", "y")]
+kmp = "kmp"     ==> [Blank          []                      $ cpe'4 (e'2 (e'2 (anf, "x"), "y"), sim, "x", "y")]
 
 
 -- page 156
@@ -77,9 +89,9 @@ sh5 = "sh5"     ==> [Sym "C"        []                      $ inst,
 -- page 160
 inst  = "inst"  ==> [Blank          []                      $ g'2 (l (inst1), "u")]
 
-inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 dom (ov, "v", "y", "x", "u", "w"),
-                     Sym "R"        [R, E]                  $ ce5 dom (ov, "v", "x", "u", "y", "w"),
-                     Sym "N"        [R, E]                  $ ce5 dom (ov, "v", "x", "y", "u", "w")]
+inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 (ov, "v", "y", "x", "u", "w"),
+                     Sym "R"        [R, E]                  $ ce5 (ov, "v", "x", "u", "y", "w"),
+                     Sym "N"        [R, E]                  $ ce5 (ov, "v", "x", "y", "u", "w")]
                      
 ov    = "ov"    ==> [Blank          []                      $ e'1 (anf)]
 
