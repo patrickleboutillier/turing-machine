@@ -1,9 +1,9 @@
-module Turing.Machine (moves, newTM, newTMM, stepTM, runTM, runTMWith, Machine(..)) where
-
+module Turing.Machine (moves, newTM, newTMM, stepTM, runTM, Machine(..)) where
 
 import Turing.Base
 import Turing.MConfig
 import Turing.StdForm
+
 
 -- The actual machine!
 data Machine = Machine Domain Tape MConfig 
@@ -38,6 +38,3 @@ stepTM n tm = sequence_ . take n . map print $ moves tm
 
 runTM :: Int -> Machine -> IO ()
 runTM n = print . last . take n . moves
-
-runTMWith :: Int -> (Char -> Bool) -> Machine -> IO ()
-runTMWith n f = putStrLn . filter f . show . last . take n . moves

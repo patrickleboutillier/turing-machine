@@ -60,8 +60,6 @@ toStandardForm :: Table -> String
 toStandardForm = concat . (\(Table _ rows) -> map sf rows) . normalizeTable 
     where sf (Row mc (Turing.Base.Sym s) [P c,o] fmc) = mc ++ s ++ c ++ show o ++ fmc ++ ";" 
 
---fromStandardForm :: String -> Maybe Table
-fromStandardForm s = groupBy (\a b -> b /= ';') s
 
 toStandardDesc :: Table -> String
 toStandardDesc = form2desc . toStandardForm 

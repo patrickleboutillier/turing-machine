@@ -1,7 +1,6 @@
 module Turing.MConfig ((==>), asList, MCH(..), MConfig(..), Behaviour(..), 
   Turing.Base.Symbol, Turing.Base.blankSym, Turing.Base.matches, Turing.Base.Domain, Turing.Base.Operation(..)) where
 
-
 import Turing.Base
 import Data.Maybe
 import Data.List

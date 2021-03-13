@@ -1,6 +1,8 @@
-module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), matches, normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
+module Turing.Base (Symbol, Domain, blankSym, Operation(L, R, P, E), SymbolSpec(..), matches, getSymbolSpecSymbols, 
+  normalizeOps, normalizeSpec, Tape(Tape), showTapeWith, blankTape, scanSymbol, apply) where
 
 import Data.List 
+
 
 -- A symbol is what can be printed on/scanned from the tape of a Turing machine.
 -- We use a string because sometimes a symbol can use more than one character (i.e. '::'
@@ -51,6 +53,11 @@ normalizeSpec ss (Not s) = map Sym . delete blankSym . delete s $ ss
 normalizeSpec ss (OneOf cs) = map Sym cs
 normalizeSpec ss (NotOneOf cs) = map Sym . delete blankSym $ ss \\ cs
 
+getSymbolSpecSymbols :: SymbolSpec -> [Symbol]
+getSymbolSpecSymbols None = [blankSym]
+getSymbolSpecSymbols (Sym s) = [s]
+getSymbolSpecSymbols (OneOf ss) = ss
+getSymbolSpecSymbols _ = []
 
 -- Our tape. Squares to the left, the current square, squares to the right.
 data Tape = Tape [Symbol] Symbol [Symbol]
@@ -62,9 +69,6 @@ instance Show Tape where
 -- Allows to show a Tape with custom delimiters.
 showTapeWith :: (String, String) -> Tape -> String
 showTapeWith (b, a) (Tape ls h rs) = "[" ++ (concat . intersperse "|" $ ls ++ [b++h++a] ++ rs) ++ "]"
- -- (p ls) ++ (b ++ h ++ a) ++ (p rs) ++ "|"
-  --where p [] = "|"  
-  --      p cs = concat . map (\x -> "|" ++ x) $ cs 
 
 -- A blank tape
 blankTape = Tape [] blankSym []
