@@ -21,9 +21,14 @@ main = do
     putStr "TATp83:      " >> runTM       20 TATp83.m
     putStr "TATp84:      " >> runTM       20 TATp84.m
     putStr "TATp87:      " >> runTM      200 TATp87.m
-    putStr "TATp8150:    " >> runTM       10 TATp150.m
+    putStr "TATp150:    " >> runTM       10 TATp150.m
     let t = tapeAfter 180000 $ u TATp150.m
     let sym = filter (\s -> s == "0" || s == "1") . squares $ t
     let t' = Tape sym " " []
-    putStr "U loaded with a tape containing the standard description of TATp8150:\n" 
-    putStr "U(TATp8150): " >> print t'
+    putStr "U loaded with a tape containing the standard description of TATp150:\n" 
+    putStr "U(TATp150): " >> print t'
+    let t = tapeAfter 10000000 $ u TATp87.m
+    let sym = filter (\s -> s == "0" || s == "1") . squares $ t
+    let t' = Tape sym " " []
+    putStr "U loaded with a tape containing the standard description of TATp87:\n" 
+    putStr "U(TATp87): " >> print t
