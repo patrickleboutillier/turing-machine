@@ -1,9 +1,9 @@
 # turing-machine
 Simulation of Turing Machines in Haskell, based on the book by "The Annotated Turing" by Charles Petzold
 
-# Introduction
+## Introduction
 
-# Contents
+## Contents
 The code has a lot of building blocks that you can play around with to investigate Turing machines in Haskell. The file main.hs contains a good summary of what is available. Here is an example of the output:
 
     ghci> main
@@ -27,7 +27,7 @@ The code has a lot of building blocks that you can play around with to investiga
 
 I tried hard to keep the machine notation very close to the one in the book/paper. For example, see here for the definition of the machie described on page 81 of the book: [Machines/TATp81.hs](Machines/TATp81.hs)
 
-# Note
+## Note
 If you are interested in building a Turing machine simulator, make sure you read "2.4 Corrections to Turing’s Universal Computing Machine
 (Donald W. Davies)" in "The Essential Turing: Seminal Writings in Computing, Logic, Philosophy, Artificial Intelligence, and Artificial Life: Plus The Secrets of Enigma"
 (http://www.cse.chalmers.se/~aikmitr/papers/Turing.pdf)
