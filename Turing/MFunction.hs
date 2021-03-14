@@ -12,7 +12,7 @@ class Named a where
 
 instance Named Symbol where 
     name s = "'" ++ s ++ "'"
-instance Named MConfig where 
+instance Named MConfig where
     name (MConfig n _) = n
 
 instance (Named a, Named b) => Named (a, b) where
@@ -27,13 +27,8 @@ instance (Named a, Named b, Named c, Named d, Named e, Named f) => Named (a, b, 
     name (a, b, c, d, e, f) = "(" ++ name a ++ "," ++ name b ++ "," ++ name c ++ "," ++ name d ++ "," ++ name e ++ "," ++ name f ++ ")"
 
 
-
 (%) :: (Named a) => String -> a -> String
 (%) f x = f ++ pp
     where n  = name x
           pp | head n == '(' = n
              | otherwise = "(" ++ n ++ ")"
-
-f  d x@(mC, mB, a) = "f"%x ==> [Sym "e"        [L]         $ f d (mC, mB, a),
-                                Not "e"        [L]         $ f d (mC, mB, a),
-                                None           [L]         $ f d (mC, mB, a)]

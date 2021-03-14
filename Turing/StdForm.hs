@@ -1,5 +1,4 @@
-module Turing.StdForm (toStandardTape, asTable, toStandardForm) where
-
+module Turing.StdForm (toStandardTape, asTable, normalizeTable, toStandardForm, toStandardDesc, toDescNumber) where
 
 import Turing.Base
 import Turing.MConfig
@@ -7,7 +6,7 @@ import Data.Maybe
 import Data.List
 
 
--- From our recursive MConfig, we will create a Table that will make the tnansformation to standard form easier.
+-- From our recursive MConfig, we will create a Table that will make the transformation to standard form easier.
 data Row = Row String SymbolSpec [Operation] String
 instance Show Row where 
   show (Row mc ss ops fmc) = mc ++ "\t-> " ++ show ss ++ "\t-> " ++ show ops ++ "\t-> " ++ fmc
@@ -15,12 +14,12 @@ instance Show Row where
   showList [] = id
 
 asRows :: MConfig -> [Row]
-asRows = concat . map domc . asList 
-    where domc (MConfig name cbs) = map (\(ss, Behaviour ops (MConfig fname _)) -> Row name ss ops fname) cbs
+asRows m = concat . map f . asList $ m 
+    where f (MConfig name cbs) = map (\(ss, Behaviour ops fmc) -> Row name ss ops $ getName fmc) cbs
 
-asTable :: Domain -> MConfig -> Table
-asTable dom = Table dom . asRows  
- 
+asTable :: MConfig -> Table
+asTable m = Table (getDomain m) . asRows $ m 
+
 
 data Table = Table Domain [Row]
 instance Show Table where 
@@ -60,8 +59,6 @@ toStandardForm :: Table -> String
 toStandardForm = concat . (\(Table _ rows) -> map sf rows) . normalizeTable 
     where sf (Row mc (Turing.Base.Sym s) [P c,o] fmc) = mc ++ s ++ c ++ show o ++ fmc ++ ";" 
 
---fromStandardForm :: String -> Maybe Table
-fromStandardForm s = groupBy (\a b -> b /= ';') s
 
 toStandardDesc :: Table -> String
 toStandardDesc = form2desc . toStandardForm 
@@ -87,14 +84,3 @@ toDescNumber = map desc2num . toStandardDesc
           desc2num 'R' = '5'
           desc2num 'N' = '6'
           desc2num ';' = '7'
-
-
---}
-
-dom = [" ", "0" ,"1"]
-b = "b" ==> [Turing.MConfig.None    [P "0", R]      c]
-c = "c" ==> [Turing.MConfig.None    [R]             e]
-e = "e" ==> [Turing.MConfig.None    [P "1", R]      f]
-f = "f" ==> [Turing.MConfig.None    [R]             b]
-
-sf = toStandardForm . asTable dom $ b
