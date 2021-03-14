@@ -1,16 +1,24 @@
-module Turing.Machine.U (u) where
+module Turing.Machine.U (m, b) where
 
 import Turing.MConfig
+import Turing.MFunction
 import Turing.MFuncLib
 import Turing.Machine
 
 
--- The domain for universal Turing machines, page 151
-dom = [" ", "0", "1", "D", "A", "C", "u", "v", "w", "x", "y", "z", ":", "L", "R", "N", ";", "::", "e"]
+m :: Machine -> Machine
+m m' = newTMM b m'
 
 
-u :: Machine -> Machine
-u m = newTMM dom b m
+-- page 152
+con  x@(mC, a) = "con"  %x ==>    [Not "A"    [R, R]                    $ con  (mC, a),
+                                   Sym "A"    [L, P a, R]               $ con1 (mC, a)]
+con1 x@(mC, a) = "con1" %x ==>    [Sym "A"    [R, P a, R]               $ con1 (mC, a),
+                                   Sym "D"    [R, P a, R]               $ con2 (mC, a),
+                                   None       [P "D", R, P a, R, R, R]  $ mC]
+con2 x@(mC, a) = "con2" %x ==>    [Sym "C"    [R, P a, R]               $ con2 (mC, a),
+                                   Not "C"    [R, R]                    $ mC,
+                                   None       [R, R]                    $ mC]
 
 
 -- page 153
@@ -19,7 +27,7 @@ b1 = "b1"       ==> [Blank          [R, R, P ":", R, R,
                                      P "D", R, R, P "A"]    $ anf]
 
 -- page 154
-anf  = "anf"    ==> [Blank          []                      $ g'2 dom (anf1, ":")]
+anf  = "anf"    ==> [Blank          []                      $ g'2 (anf1, ":")]
 anf1 = "anf1"   ==> [Blank          []                      $ con (kom, "y")]
 
 kom  = "kom"    ==> [Sym ";"        [R, P "z", L]           $ con (kmp, "x"),
@@ -30,22 +38,22 @@ kom  = "kom"    ==> [Sym ";"        [R, P "z", L]           $ con (kmp, "x"),
                      None           [L]                     $ kom]
 
 -- page 155
-kmp = "kmp"     ==> [Blank          []                      $ cpe'4 dom (e'2 dom (e'2 dom (anf, "x"), "y"), sim, "x", "y")]
+kmp = "kmp"     ==> [Blank          []                      $ cpe'4 (e'2 (e'2 (anf, "x"), "y"), sim, "x", "y")]
 
 
 -- page 156
-sim  = "sim"    ==> [Blank          []                      $ f' dom (sim1, sim1, "z")]
+sim  = "sim"    ==> [Blank          []                      $ f' (sim1, sim1, "z")]
 sim1 = "sim1"   ==> [Blank          []                      $ con (sim2, blankSym)]
 
 sim2 = "sim2"   ==> [Sym "A"        []                      $ sim3,
                      Not "A"        [L, P "u", R, R, R]     $ sim2]           
 
-sim3 = "sim3"   ==> [Not "A"        [L, P "y"]              $ e'2 dom (mk, "z"),
+sim3 = "sim3"   ==> [Not "A"        [L, P "y"]              $ e'2 (mk, "z"),
                      Sym "A"        [L, P "y", R, R, R]     $ sim3]
 
 
 -- page 157
-mk  = "mk"      ==> [Blank          []                      $ g'2 dom (mk1, ":")]
+mk  = "mk"      ==> [Blank          []                      $ g'2 (mk1, ":")]
 mk1 = "mk1"     ==> [Not "A"        [R, R]                  $ mk1,
                      Sym "A"        [L, L, L, L]            $ mk2]
 
@@ -70,18 +78,18 @@ sh2 = "sh2"     ==> [Sym "D"        [R, R, R, R]            $ sh3,
 sh3 = "sh3"     ==> [Sym "C"        [R, R]                  $ sh4,
                      Not "C"        []                      $ inst]                        
 sh4 = "sh4"     ==> [Sym "C"        [R, R]                  $ sh5,
-                     Not "C"        []                      $ pe2 dom (inst, "0", ":")]  
+                     Not "C"        []                      $ pe2 (inst, "0", ":")]  
 sh5 = "sh5"     ==> [Sym "C"        []                      $ inst,
-                     Not "C"        []                      $ pe2 dom (inst, "1", ":")]  
+                     Not "C"        []                      $ pe2 (inst, "1", ":")]  
                  
 -- page 160
-inst  = "inst"  ==> [Blank          []                      $ g'2 dom (l (inst1), "u")]
+inst  = "inst"  ==> [Blank          []                      $ g'2 (l (inst1), "u")]
 
-inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 dom (ov, "v", "y", "x", "u", "w"),
-                     Sym "R"        [R, E]                  $ ce5 dom (ov, "v", "x", "u", "y", "w"),
-                     Sym "N"        [R, E]                  $ ce5 dom (ov, "v", "x", "y", "u", "w")]
+inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 (ov, "v", "y", "x", "u", "w"),
+                     Sym "R"        [R, E]                  $ ce5 (ov, "v", "x", "u", "y", "w"),
+                     Sym "N"        [R, E]                  $ ce5 (ov, "v", "x", "y", "u", "w")]
                      
-ov    = "ov"    ==> [Blank          []                      $ e'1 dom (anf)]
+ov    = "ov"    ==> [Blank          []                      $ e'1 (anf)]
 
 
 
