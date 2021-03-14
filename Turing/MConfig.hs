@@ -8,21 +8,12 @@ import Data.List
 
 -- An MConfig is made up of 2 parts: the SymbolSpec and the Behaviour
 data MConfig = MConfig String [(SymbolSpec, Behaviour)] | DynMConfig (Symbol -> MConfig)
---instance Show MConfig where 
---    show (MConfig name cbs) = init . concat $ map (\cb -> name ++ "\t-> " ++ showcb cb ++ "\n") cbs 
---        where showcb (sspec, b) = (show sspec) ++ "\t-> " ++ (show b)
---    show (DynMConfig f) = show $ f "*"
---    showList (m:ms) = shows m . ("\n" ++) . showList ms
---    showList [] = id
 
 getName :: MConfig -> String
 getName (MConfig name _) = name
 getName (DynMConfig f) = getName $ f "*"
 
 data Behaviour = Behaviour [Operation] MConfig
---instance Show Behaviour where 
---    show (Behaviour ops (MConfig name _)) = show ops ++ "\t-> " ++ name
---    show (Behaviour ops dmc) = show ops ++ "\t-> " ++ show dmc
 
 data MCH = Blank [Operation] MConfig | None [Operation] MConfig | Any [Operation] MConfig |
                  Sym Symbol [Operation] MConfig | Not Symbol [Operation] MConfig | 

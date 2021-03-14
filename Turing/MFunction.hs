@@ -11,7 +11,6 @@ class Named a where
     name :: a -> String
 
 instance Named Symbol where 
-    name "*" = "*"
     name s = "'" ++ s ++ "'"
 instance Named MConfig where
     name (MConfig n _) = n

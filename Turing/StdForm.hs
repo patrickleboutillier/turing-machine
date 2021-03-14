@@ -1,5 +1,4 @@
-module Turing.StdForm (toStandardTape, asTable, toStandardForm) where
-
+module Turing.StdForm (toStandardTape, asTable, normalizeTable, toStandardForm, toStandardDesc, toDescNumber) where
 
 import Turing.Base
 import Turing.MConfig
@@ -85,13 +84,3 @@ toDescNumber = map desc2num . toStandardDesc
           desc2num 'R' = '5'
           desc2num 'N' = '6'
           desc2num ';' = '7'
-
-
---}
-
-b = "b" ==> [Turing.MConfig.None    [P "0", R]      c]
-c = "c" ==> [Turing.MConfig.None    [R]             e]
-e = "e" ==> [Turing.MConfig.None    [P "1", R]      f]
-f = "f" ==> [Turing.MConfig.None    [R]             b]
-
-sf = toStandardForm . asTable $ b

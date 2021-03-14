@@ -1,4 +1,4 @@
-module Turing.Machine.U (u) where
+module Turing.Machine.U (m, b) where
 
 import Turing.MConfig
 import Turing.MFunction
@@ -6,8 +6,8 @@ import Turing.MFuncLib
 import Turing.Machine
 
 
-u :: Machine -> Machine
-u m = newTMM b m
+m :: Machine -> Machine
+m m' = newTMM b m'
 
 
 -- page 152

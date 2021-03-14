@@ -6,7 +6,7 @@ import Turing.MFunction
 
 
 {--
-    This file contains all the function defined by Turing, see chapter 7 of "The Annotated Turing"
+    This file contains all the functions defined by Turing, see chapter 7 of "The Annotated Turing"
 --}
 
 
