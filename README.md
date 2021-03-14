@@ -25,6 +25,8 @@ The code has a lot of building blocks that you can play around with to investiga
     U(TATp150) run:  [0|1|0|1|0|1|0|1|0|[ ]]
     Description number of U has 56625959 digits.
 
+I tried hard to keep the machine notation very close to the one in the book/paper. For example, see here for the definition of the machie described on page 81 of the book: [Machines/TATp81.hs](Machines/TATp81.hs)
+
 # Note
 If you are interested in building a Turing machine simulator, make sure you read "2.4 Corrections to Turing’s Universal Computing Machine
 (Donald W. Davies)" in "The Essential Turing: Seminal Writings in Computing, Logic, Philosophy, Artificial Intelligence, and Artificial Life: Plus The Secrets of Enigma"
