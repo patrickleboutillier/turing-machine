@@ -58,7 +58,6 @@ MF<MC*(MC*, MC*, char)> fr("fr", [](MC *C, MC *B, char a, char s){
   BLANK(s, "", f(r(C, s), B, a, s)) ;
 }) ;
 
-
 MF<MC*(MC*, MC*, char)> c("c", [](MC *C, MC *B, char a, char s){
   BLANK(s, "", fl(c1(C, s), B, a, s)) ;
 }) ;
@@ -68,10 +67,10 @@ MF<MC*(MC*)> c1("c1", [](MC *C, char s){
 
 
 // page 122
-MF<MC*(MC*, MC*, char)> ce_3("ce", [](MC *C, MC *B, char a, char s){
+MF<MC*(MC*, MC*, char)> ce_3("ce_3", [](MC *C, MC *B, char a, char s){
   BLANK(s, "", c(e_3(C, B, a, s), B, a, s)) ;
 }) ;  
-MF<MC*(MC*, char)> ce_2("ce", [](MC *B, char a, char s){
+MF<MC*(MC*, char)> ce_2("ce_2", [](MC *B, char a, char s){
   BLANK(s, "", ce_3(ce_2(B, a, s), B, a, s)) ;
 }) ;  
 
@@ -88,41 +87,37 @@ MF<MC*(MC*, char, char)> re_3("re_3", [](MC *B, char a, char b, char s){
 }) ; 
 
 
-/*
-extern MF cr(MF C, MF B, const char *a), cr(MF B, const char *a), cp(MF C, MF U, MF E, const char *a, const char *b), 
-  cp1(MF C, MF U, const char *b), cp2(MF C, MF U, const char *b), 
-  cpe(MF C, MF U, MF E, const char *a, const char *b), cpe(MF U, MF E, const char *a, const char *b) ;
-
 // page 123
-MF cr(MF C, MF B, const char *a){ return [C, B, a]() {
-  BLANK, "", c(re(C, B, a, a), B, a)) ;
-} ; } ;  
-MF cr(MF B, const char *a){ return [B, a]() {
-  BLANK, "", cr(cr(B, a), re(B, a, a), a)) ;
-} ; } ; 
-
-MF cp(MF C, MF U, MF E, const char *a, const char *b){ return [C, U, E, a, b]() {
-  BLANK, "", fl(cp1(C, U, b), f(U, E, b), a)) ;
-} ; } ; 
-MF cp1(MF C, MF U, const char *b){ return [C, U, b]() {
-  const char *dom = MC.get_domain() ;
-  for (int i = 0 ; dom[i] != '\0' ; i++){
-    dom[i], "", fl(cp2(C, U, &dom[i]), U, b)) ;
-  }
-} ; } ;
-MF cp2(MF C, MF U, const char *y){ return [C, U, y]() {
-  SYM(*y), "", C) ;
-  NOT(*y), "", U) ; //-- None line required here?
-} ; } ; 
-
-MF cpe(MF C, MF U, MF E, const char *a, const char *b){ return [C, U, E, a, b]() {
-  BLANK, "", cp(e(e(C, C, b), C, a), U, E, a, b)) ;
-} ; } ; 
-MF cpe(MF U, MF E, const char *a, const char *b){ return [U, E, a, b]() {
-  BLANK, "", cpe(cpe(U, E, a, b), U, E, a, b)) ;
-} ; } ;
+MF<MC*(MC*, MC*, char)> cr_3("cr_3", [](MC *C, MC *B, char a, char s){
+  BLANK(s, "", c(re_4(C, B, a, a, s), B, a, s)) ;
+}) ;  
+MF<MC*(MC*, char)> cr_2("cr_2", [](MC *B, char a, char s){
+  BLANK(s, "", cr_3(cr_2(B, a, s), re_3(B, a, a, s), a, s)) ;
+}) ; 
 
 
+MF<MC*(MC*, MC*, MC*, char, char)> cp("cp", [](MC *C, MC *U, MC *E, char a, char b, char s){
+  BLANK(s, "", fl(cp1(C, U, b, s), f(U, E, b, s), a, s)) ;
+}) ; 
+MF<MC*(MC*, MC*, char)> cp1("cp1", [](MC *C, MC *U, char b, char s){
+  return fl(cp2(C, U, s, s), U, b, s) ;
+}) ;
+MF<MC*(MC*, MC*, char)> cp2("cp2", [](MC *C, MC *U, char y, char s){
+  SYM(s, y, "", C) ;
+  NOT(s, y, "", U) ; // NONE line required here?
+}) ; 
+
+
+//MF cpe(MF C, MF U, MF E, const char *a, const char *b){ return [C, U, E, a, b]() {
+MF<MC*(MC*, MC*, MC*, char, char)> cpe_5("cpe_5", [](MC *C, MC *U, MC *E, char a, char b, char s){
+  BLANK(s, "", cp(e_3(e_3(C, C, b, s), C, a, s), U, E, a, b, s)) ;
+}) ; 
+MF<MC*(MC*, MC*, char, char)> cpe_4("cpe_4", [](MC *U, MC *E, char a, char b, char s){
+  BLANK(s, "", cpe_5(cpe_4(U, E, a, b, s), U, E, a, b, s)) ;
+}) ;
+
+
+/*
 extern MF g(MF C), g1(MF C), g(MF C, const char *a), g1(MF C, const char *a), pe2(MF C, MF B, const char *a) ;
 
 // page 124, g instead of q
