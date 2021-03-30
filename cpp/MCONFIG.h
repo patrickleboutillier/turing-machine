@@ -1,16 +1,13 @@
 #ifndef MCONFIG_H
 #define MCONFIG_H
 
-
 #include "Lambda.h"
 #include "TAPE.h"
 #include <string.h>
 
-extern int NB_MC ;
-extern int MAX_MC ;
-extern int SIZE_MC ;
-extern int MAX_SIZE_MC ;
+
 extern int NB_MF ;
+
 
 // Symbol specifiers
 #define     _BLANK     '*'
@@ -30,15 +27,12 @@ extern int NB_MF ;
 
 class MCONFIG {
   private:
-    // char _name[5] ;
+    char _name[5] ;
     Lambda<MCONFIG(char s)> _f ;
     static TAPE *_tape ;
     void set_name(const char *name) ;
   public:
-    MCONFIG() ;
-    MCONFIG(const MCONFIG &mc) ;
     MCONFIG(const char *name, Lambda<MCONFIG(char s)>) ;
-    ~MCONFIG(){ NB_MC-- ;  SIZE_MC -= sizeof(*this) ; } ;
     const char *get_name() ;
     static bool matches(char ss, char s) ;
     MCONFIG operator()(char s) ;
@@ -53,10 +47,10 @@ typedef MCONFIG MC ;
 template<typename T> class MF {} ;
 template<typename Out, typename... In> class MF<Out(In...)> {
   private:
-    char _name[4] ;
+    char _name[5] ;
     Out (*_f)(In..., char s) ;
   public:
-    MF(const char *name, MCONFIG (*f)(In..., char s)){ strncpy(_name, name, 3) ; _name[3] = '\0' ; _f = f ; NB_MF++ ; } ;
+    MF(const char *name, MCONFIG (*f)(In..., char s)){ strncpy(_name, name, 3) ; _name[4] = '\0' ; _f = f ; NB_MF++ ; } ;
     const char *get_name(){ return _name ; } 
     Out operator()(In... args){ 
       return MC(get_name(), [args..., this](char s){

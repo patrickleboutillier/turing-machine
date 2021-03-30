@@ -10,12 +10,13 @@ extern int MAX_LAMBDA ;
 extern int SIZE_LAMBDA ;
 extern int MAX_SIZE_LAMBDA ;
 
+
 // Lambda contains most of the lambda management code and can be used
 // directly in external code.
 template <typename T> class Lambda {};
 template <typename Out, typename ...In> class Lambda<Out(In...)> {
   public:
-    Lambda() : lambda(nullptr), deleteLambda(nullptr), copyLambda(nullptr), executeLambda(nullptr), helper(nullptr){
+    Lambda() : lambda(nullptr), executeLambda(nullptr), helper(nullptr){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
       SIZE_LAMBDA += sizeof(*this) ;
@@ -23,8 +24,8 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
     }
 
     Lambda(Lambda<Out(In...)> const &other) : 
-        lambda(other.copyLambda ? other.copyLambda(other.lambda) : nullptr),
-        deleteLambda(other.deleteLambda), copyLambda(other.copyLambda), executeLambda(other.executeLambda), helper(other.helper){
+        lambda(other.helper ? other.helper(other.lambda, 'c') : nullptr),
+        executeLambda(other.executeLambda), helper(other.helper){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
       SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's'))) ;
@@ -45,15 +46,13 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
       SIZE_LAMBDA -= sizeof(*this) ;
       if (this->lambda != nullptr){
         SIZE_LAMBDA -= (long)(helper(this->lambda, 's')) ;      
+        helper(this->lambda, 'd') ;
       }
-      if (deleteLambda != nullptr) deleteLambda(lambda);
     }
 
     Lambda<Out(In...)> &operator =(Lambda<Out(In...)> const &other){
-      if (this->lambda != nullptr) deleteLambda(this->lambda);
-      this->lambda = other.copyLambda ? other.copyLambda(other.lambda) : nullptr;
-      this->deleteLambda = other.deleteLambda;
-      this->copyLambda = other.copyLambda;
+      if (this->lambda != nullptr) helper(this->lambda, 'd') ;
+      this->lambda = other.helper ? other.helper(other.lambda, 'c') : nullptr;
       this->helper = other.helper;
       this->executeLambda = other.executeLambda;
       return *this;
@@ -75,15 +74,8 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
 
   private:
     template<typename T> void copy(T const &lambda){
-      if (this->lambda != nullptr) deleteLambda(this->lambda);
+      if (this->lambda != nullptr) helper(this->lambda, 'd') ;
       this->lambda = new T(lambda);
-      deleteLambda = [](void *lambda){
-        delete (T *)lambda;
-      };
-
-      copyLambda = [](void *lambda) -> void * {
-        return lambda ? new T(*(T *)lambda) : nullptr;
-      };
 
       executeLambda = [](void *lambda, In... arguments) -> Out {
         return ((T *)lambda)->operator()(arguments...);
@@ -93,13 +85,15 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
         switch (h){
           case 's' :
             return (void *)(lambda ? sizeof(*(T *)lambda) : 0) ;
+          case 'd' :
+            delete (T *)lambda ; return nullptr ;
+          case 'c':
+            return lambda ? new T(*(T *)lambda) : nullptr ;
         }
       };
     }
 
     void *lambda;
-    void (*deleteLambda)(void *);
-    void *(*copyLambda)(void *);
     void *(*helper)(void *, char);
     Out (*executeLambda)(void *, In...);
 };

@@ -12,6 +12,7 @@ class TAPE {
   private:
     char _squares[TAPE_LEN] ;
     int _pos ;
+    int _max_pos ;
   public:
     TAPE() ;
     TAPE(const char *tape) ;

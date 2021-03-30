@@ -1,5 +1,6 @@
 #include "TAPE.h"
 #include "MCONFIG.h"
+#include "Lambda.h"
 #include "MACHINE.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,8 +15,9 @@
 
 
 void status(){
-    printf("size of Lambda: %ld\n", sizeof(Lambda<MCONFIG(char s)>)) ;
-    printf("%d MC (max %d, max size %d), %d MF\n", NB_MC, MAX_MC, MAX_SIZE_MC, NB_MF) ;
+    printf("size of Lambda<MCONFIG(char): %ld\n", sizeof(Lambda<MCONFIG(char s)>)) ;
+    printf("%d Lambda (max %d, max_size %d)\n", NB_LAMBDA, MAX_LAMBDA, MAX_SIZE_LAMBDA) ;
+    printf("%d MF\n", NB_MF) ;
 }
 
 // MCONFIG MC(" 01:%;ACDLNReuvwxyz") ;

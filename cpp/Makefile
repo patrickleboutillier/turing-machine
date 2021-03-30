@@ -9,4 +9,4 @@ build:
 
 test: 
 	@g++ $(GCC_ARGS) $(SOURCE) $(LIBS) test.cpp -o t
-	@time ./t $(STEPS)
+	@./t $(STEPS)
