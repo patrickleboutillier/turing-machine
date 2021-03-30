@@ -17,7 +17,7 @@ extern int NB_MF ;
 #define     _NOT(s)    (-s)
 
 
-#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ MCONFIG::get_tape()->apply_ops(ops) ; return fmc ; }
+#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ TAPE::get_tape()->apply_ops(ops) ; return fmc ; }
 #define BLANK(s, ops, fmc)       _RULE(_BLANK, s, ops, fmc)
 #define NONE(s, ops, fmc)        _RULE(_NONE, s, ops, fmc)
 #define ANY(s, ops, fmc)         _RULE(_ANY, s, ops, fmc)

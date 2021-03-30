@@ -31,12 +31,12 @@ void MACHINE::_run(int steps, bool step){
     n++ ;
     if (n >= steps){
       printf("%6d ", n) ;
-      _tape->print(mc) ;
+      _tape->print(mc.get_name()) ;
       return ;
     }
     if (step){
       printf("%6d ", n) ;
-      _tape->print(mc) ; 
+      _tape->print(mc.get_name()) ; 
       if (n >= (steps - 10)){
       }
     }

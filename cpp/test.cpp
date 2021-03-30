@@ -34,14 +34,16 @@ int main(int argc, char *argv[]) {
 
     status() ;
     {
+        TAPE::get_tape()->blank() ;
         printf("TATp81 run:\t") ;
         TATp81::m.run(20) ;
+        TAPE::get_tape()->blank() ;
         printf("TATp81f run:\t") ;
         TATp81f::m.run(20) ;
 
+        TAPE::get_tape()->init("ee; D A D D C R D A A ; D A A D D C C R D A %") ;
         printf("U(TATp150) run:\t") ;
-        TAPE tape("ee; D A D D C R D A A ; D A A D D C C R D A %") ;
-        MACHINE m(&tape, U::b) ;
+        MACHINE m(TAPE::get_tape(), U::b) ;
         m.run(steps) ;
     }
     status() ;
