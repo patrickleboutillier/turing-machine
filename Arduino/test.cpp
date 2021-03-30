@@ -14,7 +14,7 @@
 
 
 void status(){
-    printf("%d MC (max %d), %d MF\n", NB_MC, MAX_MC, NB_MF) ;
+    printf("%d MC (max %d, max size %d), %d MF\n", NB_MC, MAX_MC, MAX_SIZE_MC, NB_MF) ;
 }
 
 // MCONFIG MC(" 01:%;ACDLNReuvwxyz") ;

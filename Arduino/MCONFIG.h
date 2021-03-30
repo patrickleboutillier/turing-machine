@@ -8,6 +8,8 @@
 
 extern int NB_MC ;
 extern int MAX_MC ;
+extern int SIZE_MC ;
+extern int MAX_SIZE_MC ;
 extern int NB_MF ;
 
 // Symbol specifiers
@@ -28,14 +30,15 @@ extern int NB_MF ;
 
 class MCONFIG {
   private:
-    char _name[9] ;
+    char _name[5] ;
     Lambda<MCONFIG(char s)> _f ;
     static TAPE *_tape ;
+    void set_name(const char *name) ;
   public:
     MCONFIG() ;
     MCONFIG(const MCONFIG &mc) ;
     MCONFIG(const char *name, Lambda<MCONFIG(char s)>) ;
-    ~MCONFIG(){ NB_MC-- ; } ;
+    ~MCONFIG(){ NB_MC-- ;  SIZE_MC -= sizeof(*this) ; } ;
     const char *get_name() ;
     static bool matches(char ss, char s) ;
     MCONFIG operator()(char s) ;
