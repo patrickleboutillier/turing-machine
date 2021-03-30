@@ -22,13 +22,13 @@ MCONFIG::MCONFIG(){
 
 
 MCONFIG::MCONFIG(const MCONFIG &mc) : MCONFIG(){
-  set_name(mc._name) ;
+  //set_name(mc._name) ;
   _f = mc._f ;
 }
 
 
 MCONFIG::MCONFIG(const char *name, Lambda<MCONFIG(char s)> f) : MCONFIG(){
-  set_name(name) ;
+  //set_name(name) ;
   _f = f ;
 }
 
@@ -44,13 +44,14 @@ TAPE *MCONFIG::get_tape(){
 
 
 void MCONFIG::set_name(const char *name){
-  strncpy(_name, name, 4) ;
-  _name[4] = '\0' ;
+  //strncpy(_name, name, 4) ;
+  //_name[4] = '\0' ;
 }
 
 
+const char *unknown = "?" ;
 const char *MCONFIG::get_name(){
-    return _name ;
+    return unknown;
 }
 
 

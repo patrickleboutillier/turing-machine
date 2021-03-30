@@ -30,7 +30,7 @@ extern int NB_MF ;
 
 class MCONFIG {
   private:
-    char _name[5] ;
+    // char _name[5] ;
     Lambda<MCONFIG(char s)> _f ;
     static TAPE *_tape ;
     void set_name(const char *name) ;
@@ -53,7 +53,7 @@ typedef MCONFIG MC ;
 template<typename T> class MF {} ;
 template<typename Out, typename... In> class MF<Out(In...)> {
   private:
-    char _name[9] ;
+    char _name[4] ;
     Out (*_f)(In..., char s) ;
   public:
     MF(const char *name, MCONFIG (*f)(In..., char s)){ strncpy(_name, name, 3) ; _name[3] = '\0' ; _f = f ; NB_MF++ ; } ;
