@@ -10,12 +10,12 @@ template<typename T> class LambdaExecutor {} ;
 template <typename Out, typename... In> class LambdaExecutor<Out(In...)> {
   public:
     Out operator()(In ... in){
-      assert(lambda != nullptr);
-      return executeLambda(lambda, in...);
+      assert(lambdaref != nullptr);
+      return executeLambda(lambdaref, in...);
     }
 
   protected:
-    LambdaExecutor(void *&lambda) : lambda(lambda) {}
+    LambdaExecutor(void *&lambdaref) : lambdaref(lambdaref) {}
 
     ~LambdaExecutor(){
     }
@@ -31,7 +31,7 @@ template <typename Out, typename... In> class LambdaExecutor<Out(In...)> {
     }
 
   private:
-    void *&lambda;
+    void *&lambdaref;
     Out (*executeLambda)(void *, In...);
 };
 
