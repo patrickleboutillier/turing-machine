@@ -1,11 +1,12 @@
-GCC_ARGS = -IMachines -Wno-return-type -lstdc++
+GCC_ARGS = -IMachines -Wno-return-type 
+LIBS = -lstdc++
 SOURCE = TAPE.cpp MCONFIG.cpp MACHINE.cpp MFUNCTIONS.cpp
 
 
 build: 
-	gcc $(GCC_ARGS) $(SOURCE) main.cpp -o main
+	g++ $(GCC_ARGS) $(SOURCE) $(LIBS) main.cpp -o main
 
 
 test: 
-	@gcc $(GCC_ARGS) $(SOURCE) test.cpp -o t
-	@./t
+	@g++ $(GCC_ARGS) $(SOURCE) $(LIBS) test.cpp -o t
+	@time ./t $(STEPS)

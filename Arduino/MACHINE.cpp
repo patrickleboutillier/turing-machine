@@ -2,9 +2,8 @@
 #include <stdio.h>
 
 
-MACHINE::MACHINE(TAPE *tape, MCONFIG *begin){
+MACHINE::MACHINE(TAPE *tape, MCONFIG begin) : _begin(begin) {
   _tape = tape ;
-  _begin = begin ;
 }
 
 
@@ -25,7 +24,7 @@ void MACHINE::step(int steps){
 
 void MACHINE::_run(int steps, bool step){
   int n = 0 ;
-  MCONFIG *mc = _begin ;
+  MCONFIG mc = _begin ;
   MCONFIG::set_tape(_tape) ;
 
   while (1) {
@@ -43,6 +42,6 @@ void MACHINE::_run(int steps, bool step){
     }
 
     char s = _tape->scan() ;
-    mc = (*mc)(s) ;
+    mc = mc(s) ;
   }
 }

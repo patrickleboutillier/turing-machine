@@ -42,9 +42,9 @@ char TAPE::scan(){
 }
 
 
-void TAPE::print(MCONFIG *mc){
+void TAPE::print(MCONFIG mc){
   char x = _squares[_pos] ;
   _squares[_pos] = '\0' ;
-  printf("[%s%c/%s%s]\n", _squares, x, mc->get_name(), _squares + _pos + 1) ;
+  printf("[%s%c/%s%s]\n", _squares, x, mc.get_name(), _squares + _pos + 1) ;
   _squares[_pos] = x ;
 }

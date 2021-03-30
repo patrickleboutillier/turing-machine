@@ -25,6 +25,7 @@ main = do
     putStr "TATp81 standard desciption: " >> (print . toStandardDesc . asTable $ TATp81.b)
     putStr "TATp81 description number: " >> (print . toDescNumber . asTable $ TATp81.b)
     putStr "TATp81 run:      " >> runTM       20 TATp81.m
+    putStr "TATp81f run:     " >> runTM       20 TATp81f.m
     putStr "TATp83 run:      " >> runTM       20 TATp83.m
     putStr "TATp84 run:      " >> runTM       20 TATp84.m
     putStr "TATp87 run:      " >> runTM      200 TATp87.m

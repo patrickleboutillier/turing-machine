@@ -2,7 +2,7 @@
 #define TAPE_H
 
 
-#define TAPE_LEN 64
+#define TAPE_LEN 128
 
 
 class MCONFIG ;
@@ -17,7 +17,7 @@ class TAPE {
     TAPE(const char *tape) ;
     bool apply_ops(const char *ops) ;
     char scan() ;
-    void print(MCONFIG *mc) ;
+    void print(MCONFIG mc) ;
 } ;
 
 #endif
