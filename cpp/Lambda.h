@@ -10,66 +10,28 @@ extern int MAX_LAMBDA ;
 extern int SIZE_LAMBDA ;
 extern int MAX_SIZE_LAMBDA ;
 
-
-// LambdaExecutor is an internal class that adds the ability to execute to
-// Lambdas. This functionality is separated because it is the only thing
-// that needed to be specialized (by return type).
-
-// generateExecutor or receiveExecutor must be called after constructing,
-// before use
-template<typename T> class LambdaExecutor {} ;
-template <typename Out, typename... In> class LambdaExecutor<Out(In...)> {
-  public:
-    Out operator()(In ... in){
-      assert(lambdaref != nullptr);
-      return executeLambda(lambdaref, in...);
-    }
-
-  protected:
-    LambdaExecutor(void *&lambdaref) : lambdaref(lambdaref) {}
-
-    ~LambdaExecutor(){
-    }
-
-    template <typename T> void generateExecutor(T const &lambda){
-      executeLambda = [](void *lambda, In... arguments) -> Out {
-        return ((T *)lambda)->operator()(arguments...);
-      };
-    }
-
-    void receiveExecutor(LambdaExecutor<Out(In...)> const &other){
-      executeLambda = other.executeLambda;
-    }
-
-  private:
-    void *&lambdaref;
-    Out (*executeLambda)(void *, In...);
-};
-
-
 // Lambda contains most of the lambda management code and can be used
 // directly in external code.
 template <typename T> class Lambda {};
-template <typename Out, typename ...In> class Lambda<Out(In...)> : public LambdaExecutor<Out(In...)> {
+template <typename Out, typename ...In> class Lambda<Out(In...)> {
   public:
-    Lambda() : LambdaExecutor<Out(In...)>(lambda), lambda(nullptr), deleteLambda(nullptr), copyLambda(nullptr), executeLambda2(nullptr), helper(nullptr){
+    Lambda() : lambda(nullptr), deleteLambda(nullptr), copyLambda(nullptr), executeLambda(nullptr), helper(nullptr){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
       SIZE_LAMBDA += sizeof(*this) ;
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
-    Lambda(Lambda<Out(In...)> const &other) : LambdaExecutor<Out(In...)>(lambda),
+    Lambda(Lambda<Out(In...)> const &other) : 
         lambda(other.copyLambda ? other.copyLambda(other.lambda) : nullptr),
-        deleteLambda(other.deleteLambda), copyLambda(other.copyLambda), executeLambda2(other.executeLambda2), helper(other.helper){
-      // this->receiveExecutor(other);
+        deleteLambda(other.deleteLambda), copyLambda(other.copyLambda), executeLambda(other.executeLambda), helper(other.helper){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
       SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's'))) ;
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
-    template<typename T> Lambda(T const &lambda) : LambdaExecutor<Out(In...)>(this->lambda), lambda(nullptr){
+    template<typename T> Lambda(T const &lambda) : lambda(nullptr){
       // Copy should set all variables
       copy(lambda);
       NB_LAMBDA++ ;
@@ -90,11 +52,10 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> : public Lambda
     Lambda<Out(In...)> &operator =(Lambda<Out(In...)> const &other){
       if (this->lambda != nullptr) deleteLambda(this->lambda);
       this->lambda = other.copyLambda ? other.copyLambda(other.lambda) : nullptr;
-      // this->receiveExecutor(other);
       this->deleteLambda = other.deleteLambda;
       this->copyLambda = other.copyLambda;
       this->helper = other.helper;
-      this->executeLambda2 = other.executeLambda2;
+      this->executeLambda = other.executeLambda;
       return *this;
     }
 
@@ -105,7 +66,7 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> : public Lambda
 
     Out operator()(In ... in){
       assert(lambda != nullptr);
-      return executeLambda2(lambda, in...);
+      return executeLambda(lambda, in...);
     }
 
     operator bool(){
@@ -116,7 +77,6 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> : public Lambda
     template<typename T> void copy(T const &lambda){
       if (this->lambda != nullptr) deleteLambda(this->lambda);
       this->lambda = new T(lambda);
-      // this->generateExecutor(lambda);
       deleteLambda = [](void *lambda){
         delete (T *)lambda;
       };
@@ -125,7 +85,7 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> : public Lambda
         return lambda ? new T(*(T *)lambda) : nullptr;
       };
 
-      executeLambda2 = [](void *lambda, In... arguments) -> Out {
+      executeLambda = [](void *lambda, In... arguments) -> Out {
         return ((T *)lambda)->operator()(arguments...);
       };
       
@@ -141,7 +101,7 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> : public Lambda
     void (*deleteLambda)(void *);
     void *(*copyLambda)(void *);
     void *(*helper)(void *, char);
-    Out (*executeLambda2)(void *, In...);
+    Out (*executeLambda)(void *, In...);
 };
 
 #endif
