@@ -9,6 +9,7 @@ extern int NB_LAMBDA ;
 extern int MAX_LAMBDA ;
 extern int SIZE_LAMBDA ;
 extern int MAX_SIZE_LAMBDA ;
+class MCONFIG ;
 
 
 // Lambda contains most of the lambda management code and can be used
@@ -78,7 +79,8 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
       this->lambda = new T(lambda);
 
       executeLambda = [](void *lambda, In... arguments) -> Out {
-        return ((T *)lambda)->operator()(arguments...);
+        Out ret = ((T *)lambda)->operator()(arguments...);
+        return ret ;
       };
       
       helper = [](void *lambda, char h) -> void * {
