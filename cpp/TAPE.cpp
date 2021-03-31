@@ -4,7 +4,23 @@
 #include "MCONFIG.h"
 
 
+TAPE *TAPE::instance = NULL ;
+
+
+TAPE *TAPE::get_tape(){
+  if (instance == NULL){
+    instance = new TAPE() ;
+  }
+  return instance ;
+}
+
+
 TAPE::TAPE(){
+  blank() ;
+}
+
+
+void TAPE::blank(){
   for (int i = 0 ; i < (TAPE_LEN-1) ; i++){
     _squares[i] = ' ' ;
   }
@@ -14,13 +30,8 @@ TAPE::TAPE(){
 }
 
 
-TAPE::TAPE(const char *tape){
-  for (int i = 0 ; i < (TAPE_LEN-1) ; i++){
-    _squares[i] = ' ' ;
-  }
-  _squares[TAPE_LEN-1] = '\0' ;
-  _pos = 1 ;
-  _max_pos = 1 ;
+void TAPE::init(const char *tape){
+  blank() ;
   for (int i = 0 ; tape[i] != '\0' ; i++){
     _squares[_pos+i] = tape[i] ;
   }  
@@ -49,10 +60,10 @@ char TAPE::scan(){
 }
 
 
-void TAPE::print(MCONFIG mc){
+void TAPE::print(const char *mc){
   char x = _squares[_pos] ;
   _squares[_pos] = '\0' ;
-  printf("[%s%c/%s", _squares, x, mc.get_name()) ;
+  printf("[%s%c/%s", _squares, x, mc) ;
   _squares[_pos] = x ;
 
   if (_max_pos > _pos){

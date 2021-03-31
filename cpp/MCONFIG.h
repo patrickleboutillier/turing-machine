@@ -6,9 +6,6 @@
 #include <string.h>
 
 
-extern int NB_MF ;
-
-
 // Symbol specifiers
 #define     _BLANK     '*'
 #define     _NONE      ' '
@@ -27,40 +24,15 @@ extern int NB_MF ;
 
 class MCONFIG {
   private:
-    char _name[5] ;
     Lambda<MCONFIG(char s)> _f ;
-    static TAPE *_tape ;
-    void set_name(const char *name) ;
   public:
-    MCONFIG(const char *name, Lambda<MCONFIG(char s)>) ;
-    const char *get_name() ;
+    MCONFIG(Lambda<MCONFIG(char s)>) ;
     static bool matches(char ss, char s) ;
     MCONFIG operator()(char s) ;
-    static TAPE *get_tape() ;
-    static void set_tape(TAPE *) ;
 } ;
 
 
 typedef MCONFIG MC ;
-
-
-template<typename T> class MF {} ;
-template<typename Out, typename... In> class MF<Out(In...)> {
-  private:
-    char _name[5] ;
-    Out (*_f)(In..., char s) ;
-  public:
-    MF(const char *name, MCONFIG (*f)(In..., char s)){ strncpy(_name, name, 3) ; _name[4] = '\0' ; _f = f ; NB_MF++ ; } ;
-    const char *get_name(){ return _name ; } 
-    Out operator()(In... args){ 
-      return MC(get_name(), [args..., this](char s){
-        return _f(args..., s) ;
-      }) ;
-    }
-} ;
-
-
-
 
 
 #endif

@@ -17,7 +17,6 @@
 void status(){
     printf("size of Lambda<MCONFIG(char): %ld\n", sizeof(Lambda<MCONFIG(char s)>)) ;
     printf("%d Lambda (max %d, max_size %d)\n", NB_LAMBDA, MAX_LAMBDA, MAX_SIZE_LAMBDA) ;
-    printf("%d MF\n", NB_MF) ;
 }
 
 // MCONFIG MC(" 01:%;ACDLNReuvwxyz") ;

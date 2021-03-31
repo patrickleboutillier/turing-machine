@@ -25,18 +25,17 @@ void MACHINE::step(int steps){
 void MACHINE::_run(int steps, bool step){
   int n = 0 ;
   MCONFIG mc = _begin ;
-  MCONFIG::set_tape(_tape) ;
 
   while (1) {
     n++ ;
     if (n >= steps){
       printf("%6d ", n) ;
-      _tape->print(mc.get_name()) ;
+      _tape->print("?") ;
       return ;
     }
     if (step){
       printf("%6d ", n) ;
-      _tape->print(mc.get_name()) ; 
+      _tape->print("?") ; 
       if (n >= (steps - 10)){
       }
     }

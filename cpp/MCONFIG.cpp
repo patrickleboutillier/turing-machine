@@ -3,41 +3,15 @@
 
 #define MAX(a,b) ((a) > (b) ? a : b)
 
-int NB_MF = 0 ;
-
 int NB_LAMBDA = 0 ;
 int MAX_LAMBDA = 0 ;
 int SIZE_LAMBDA = 0 ;
 int MAX_SIZE_LAMBDA = 0 ;
 
 
-TAPE *MCONFIG::_tape = NULL ; 
 
-
-MCONFIG::MCONFIG(const char *name, Lambda<MCONFIG(char s)> f) {
-  set_name(name) ;
+MCONFIG::MCONFIG(Lambda<MCONFIG(char s)> f) {
   _f = f ;
-}
-
-
-void MCONFIG::set_tape(TAPE *tape){
-    _tape = tape ; 
-}
-
-
-TAPE *MCONFIG::get_tape(){
-    return _tape ; 
-}
-
-
-void MCONFIG::set_name(const char *name){
-  strncpy(_name, name, 4) ;
-  _name[4] = '\0' ;
-}
-
-
-const char *MCONFIG::get_name(){
-    return _name ;
 }
 
 
