@@ -9,8 +9,15 @@ int SIZE_LAMBDA = 0 ;
 int MAX_SIZE_LAMBDA = 0 ;
 
 
+MC buf ;
 
-MCONFIG::MCONFIG(Lambda<MCONFIG(char s)> f) {
+
+void storeOut(MCONFIG mc){
+  buf = mc ;
+}
+
+
+MCONFIG::MCONFIG(Lambda<MCONFIG> f) {
   _f = f ;
 }
 
@@ -35,5 +42,6 @@ bool MCONFIG::matches(char ss, char s){
 
 
 MCONFIG MCONFIG::operator()(char s){     
-    return _f(s) ;
+  _f(s) ;
+  return buf ;
 }

@@ -1,7 +1,7 @@
 #ifndef LAMBDA_H
 #define LAMBDA_H
 
-#include <cassert>
+#include <stdio.h>
 
 #define MAX(a,b) ((a) > (b) ? a : b)
 
@@ -9,27 +9,28 @@ extern int NB_LAMBDA ;
 extern int MAX_LAMBDA ;
 extern int SIZE_LAMBDA ;
 extern int MAX_SIZE_LAMBDA ;
+
 class MCONFIG ;
+void storeOut(MCONFIG mc) ; 
 
 
 // Lambda contains most of the lambda management code and can be used
 // directly in external code.
-template <typename T> class Lambda {};
-template <typename Out, typename ...In> class Lambda<Out(In...)> {
+template <typename Out> class Lambda {
   public:
-    Lambda() : lambda(nullptr), executeLambda(nullptr), helper(nullptr){
+    Lambda() : lambda(nullptr), helper(nullptr){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
       SIZE_LAMBDA += sizeof(*this) ;
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
-    Lambda(Lambda<Out(In...)> const &other) : 
-        lambda(other.helper ? other.helper(other.lambda, 'c') : nullptr),
-        executeLambda(other.executeLambda), helper(other.helper){
+    Lambda(Lambda<Out> const &other) : 
+        lambda(other.helper ? other.helper(other.lambda, 'c', '\0') : nullptr),
+        helper(other.helper){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
-      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's'))) ;
+      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's', '\0'))) ;
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
@@ -38,7 +39,7 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
       copy(lambda);
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
-      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's'))) ;
+      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's', '\0'))) ;
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
@@ -46,27 +47,25 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
       NB_LAMBDA-- ;
       SIZE_LAMBDA -= sizeof(*this) ;
       if (this->lambda != nullptr){
-        SIZE_LAMBDA -= (long)(helper(this->lambda, 's')) ;      
-        helper(this->lambda, 'd') ;
+        SIZE_LAMBDA -= (long)(helper(this->lambda, 's', '\0')) ;      
+        helper(this->lambda, 'd', '\0') ;
       }
     }
 
-    Lambda<Out(In...)> &operator =(Lambda<Out(In...)> const &other){
-      if (this->lambda != nullptr) helper(this->lambda, 'd') ;
-      this->lambda = other.helper ? other.helper(other.lambda, 'c') : nullptr;
+    Lambda<Out> &operator =(Lambda<Out> const &other){
+      if (this->lambda != nullptr) helper(this->lambda, 'd', '\0') ;
+      this->lambda = other.helper ? other.helper(other.lambda, 'c', '\0') : nullptr;
       this->helper = other.helper;
-      this->executeLambda = other.executeLambda;
       return *this;
     }
 
-    template<typename T> Lambda<Out(In...)> &operator =(T const &lambda){
+    template<typename T> Lambda<Out> &operator =(T const &lambda){
       copy(lambda);
       return *this;
     }
 
-    Out operator()(In ... in){
-      assert(lambda != nullptr);
-      return executeLambda(lambda, in...);
+    void operator()(char s){
+      helper(this->lambda, 'e', s) ;
     }
 
     operator bool(){
@@ -75,29 +74,30 @@ template <typename Out, typename ...In> class Lambda<Out(In...)> {
 
   private:
     template<typename T> void copy(T const &lambda){
-      if (this->lambda != nullptr) helper(this->lambda, 'd') ;
+      if (this->lambda != nullptr) helper(this->lambda, 'd', '\0') ;
       this->lambda = new T(lambda);
-
-      executeLambda = [](void *lambda, In... arguments) -> Out {
-        Out ret = ((T *)lambda)->operator()(arguments...);
-        return ret ;
-      };
       
-      helper = [](void *lambda, char h) -> void * {
+      helper = [](void *lambda, char h, char s) -> void * {
         switch (h){
-          case 's' :
-            return (void *)(lambda ? sizeof(*(T *)lambda) : 0) ;
+          case 's' : {
+            long size = (lambda ? sizeof(*(T *)lambda) : 0) ; 
+            // printf("size: %ld\n", size) ;
+            return (void *)size ;
+          }
           case 'd' :
             delete (T *)lambda ; return nullptr ;
           case 'c':
             return lambda ? new T(*(T *)lambda) : nullptr ;
+          case 'e':
+            storeOut(((T *)lambda)->operator()(s)) ;
+            return nullptr ;
         }
-      };
+      } ;
     }
 
     void *lambda;
-    void *(*helper)(void *, char);
-    Out (*executeLambda)(void *, In...);
-};
+    void *(*helper)(void *, char, char) ;
+} ;
+
 
 #endif

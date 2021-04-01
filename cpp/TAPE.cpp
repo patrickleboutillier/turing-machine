@@ -1,5 +1,5 @@
 #include "TAPE.h"
-#include <stdio.h>
+#include "PRINT.h"
 
 #include "MCONFIG.h"
 
@@ -63,15 +63,19 @@ char TAPE::scan(){
 void TAPE::print(const char *mc){
   char x = _squares[_pos] ;
   _squares[_pos] = '\0' ;
-  printf("[%s%c/%s", _squares, x, mc) ;
+  PRINT::print("[") ;
+  PRINT::print(_squares) ;
+  PRINT::print(x) ;
+  PRINT::print("/") ;
+  PRINT::print(mc) ;
   _squares[_pos] = x ;
 
   if (_max_pos > _pos){
     char m = _squares[_max_pos] ;
     _squares[_max_pos] = '\0' ;
-    printf("%s", _squares + _pos + 1) ;
+    PRINT::print(_squares + _pos + 1) ;
     _squares[_max_pos] = m ;
   }
 
-  printf("]\n") ;
+  PRINT::print("]\n") ;
 }

@@ -24,9 +24,10 @@
 
 class MCONFIG {
   private:
-    Lambda<MCONFIG(char s)> _f ;
+    Lambda<MCONFIG> _f ;
   public:
-    MCONFIG(Lambda<MCONFIG(char s)>) ;
+    MCONFIG(){} ;
+    MCONFIG(Lambda<MCONFIG>) ;
     static bool matches(char ss, char s) ;
     MCONFIG operator()(char s) ;
 } ;
