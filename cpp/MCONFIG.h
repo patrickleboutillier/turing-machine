@@ -3,7 +3,7 @@
 
 #include "Lambda.h"
 #include "TAPE.h"
-
+#include "PRINT.h"
 
 // Symbol specifiers
 #define     _BLANK     '*'
@@ -19,6 +19,8 @@
 #define ANY(s, ops, fmc)         _RULE(_ANY, s, ops, fmc)
 #define SYM(s, a, ops, fmc)      _RULE(_SYM(a), s, ops, fmc)
 #define NOT(s, a, ops, fmc)      _RULE(_NOT(a), s, ops, fmc)
+#define DONE(s)                   { PRINT::print(s) ; PRINT::print("\n") ; }
+
 
 
 class MCONFIG {

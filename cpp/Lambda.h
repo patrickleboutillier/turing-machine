@@ -1,7 +1,7 @@
 #ifndef LAMBDA_H
 #define LAMBDA_H
 
-#include <stdio.h>
+#include "PRINT.h"
 #include <string.h>
 
 #define MAX(a,b) ((a) > (b) ? a : b)
@@ -12,7 +12,7 @@ extern int SIZE_LAMBDA ;
 extern int MAX_SIZE_LAMBDA ;
 
 class MCONFIG ;
-void storeOut(MCONFIG mc) ; 
+void storeOut(MCONFIG &mc) ; 
 
 
 // Lambda contains most of the lambda management code and can be used
@@ -20,28 +20,29 @@ void storeOut(MCONFIG mc) ;
 class Lambda {
   public:
     Lambda() : lambda(nullptr), helper(nullptr){
-      NB_LAMBDA++ ;
-      MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
-      SIZE_LAMBDA += sizeof(*this) ;
-      MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
+      countLambda() ;
     }
 
     Lambda(Lambda const &other) : 
         lambda(other.helper ? other.helper(other.lambda, 'c', '\0') : nullptr),
         helper(other.helper){
-      NB_LAMBDA++ ;
-      MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
-      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's', '\0'))) ;
-      MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
+      countLambda() ;
     }
 
     template<typename T> Lambda(T const &lambda) : lambda(nullptr){
       // Copy should set all variables
       copy(lambda);
+      countLambda() ;
+    }
+
+    void countLambda(){
       NB_LAMBDA++ ;
       MAX_LAMBDA = MAX(MAX_LAMBDA, NB_LAMBDA) ;
-      SIZE_LAMBDA += (sizeof(*this) + (long)(helper(this->lambda, 's', '\0'))) ;
-      MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
+      SIZE_LAMBDA += sizeof(*this)  ;
+      if (this->lambda != nullptr){
+        SIZE_LAMBDA += (long)(helper(this->lambda, 's', '\0')) ;
+      }
+      MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ; 
     }
 
     ~Lambda(){
@@ -90,7 +91,8 @@ class Lambda {
           case 'c':
             return lambda ? new T(*(T *)lambda) : nullptr ;
           case 'e':
-            storeOut(((T *)lambda)->operator()(s)) ;
+            MCONFIG mc = ((T *)lambda)->operator()(s) ;
+            storeOut(mc) ;
             return nullptr ;
         }
       } ;

@@ -2,7 +2,7 @@
 #define TAPE_H
 
 
-#define TAPE_LEN 64
+#define TAPE_LEN 128
 
 
 class TAPE {

@@ -73,7 +73,7 @@ MC sim1([](char s){
 }) ;
 MC sim2([](char s){
   SYM(s, 'A', "",      sim3) ;
-  NOT(s, 'A', "<u>>>", sim2) ; 
+  NOT(s, 'A', "<u>>>", sim2) ;
 }) ;
 MC sim3([](char s){
   NOT(s, 'A', "<y",    e(mk, 'z')) ;
@@ -122,7 +122,7 @@ MC sh3([](char s){
 }) ;
 MC sh4([](char s){
   SYM(s, 'C', ">>", sh5) ;
-  NOT(s, 'C', "",   pe2(inst, '0', ':')) ;
+  NOT(s, 'C', "",   pe2(inst, '0', ':')) ; 
 }) ;
 MC sh5([](char s){
   SYM(s, 'C', "", inst) ;

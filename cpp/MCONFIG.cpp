@@ -11,7 +11,7 @@ int MAX_SIZE_LAMBDA = 0 ;
 MC buf ;
 
 
-void storeOut(MCONFIG mc){
+void storeOut(MCONFIG &mc){
   buf = mc ;
 }
 
