@@ -1,5 +1,5 @@
 #include "MACHINE.h"
-#include <stdio.h>
+#include "PRINT.h"
 
 
 MACHINE::MACHINE(TAPE *tape, MCONFIG begin) : _begin(begin) {
@@ -29,12 +29,12 @@ void MACHINE::_run(int steps, bool step){
   while (1) {
     n++ ;
     if (n >= steps){
-      printf("%6d ", n) ;
+      PRINT::print(n) ;
       _tape->print("?") ;
       return ;
     }
     if (step){
-      printf("%6d ", n) ;
+      PRINT::print(n) ;
       _tape->print("?") ; 
       if (n >= (steps - 10)){
       }

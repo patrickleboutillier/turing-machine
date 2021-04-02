@@ -8,7 +8,6 @@ int MAX_LAMBDA = 0 ;
 int SIZE_LAMBDA = 0 ;
 int MAX_SIZE_LAMBDA = 0 ;
 
-
 MC buf ;
 
 
@@ -17,7 +16,7 @@ void storeOut(MCONFIG mc){
 }
 
 
-MCONFIG::MCONFIG(Lambda<MCONFIG> f) {
+MCONFIG::MCONFIG(Lambda f) {
   _f = f ;
 }
 

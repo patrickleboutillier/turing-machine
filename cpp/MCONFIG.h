@@ -3,7 +3,6 @@
 
 #include "Lambda.h"
 #include "TAPE.h"
-#include <string.h>
 
 
 // Symbol specifiers
@@ -24,10 +23,12 @@
 
 class MCONFIG {
   private:
-    Lambda<MCONFIG> _f ;
+    Lambda _f ;
   public:
     MCONFIG(){} ;
-    MCONFIG(Lambda<MCONFIG>) ;
+    MCONFIG(MCONFIG const &other) : _f(other._f){} ; 
+    MCONFIG &operator =(MCONFIG const &other){ _f = other._f ; return *this ; } ;
+    MCONFIG(Lambda) ;
     static bool matches(char ss, char s) ;
     MCONFIG operator()(char s) ;
 } ;

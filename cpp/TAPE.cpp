@@ -4,14 +4,11 @@
 #include "MCONFIG.h"
 
 
-TAPE *TAPE::instance = NULL ;
+TAPE instance ;
 
 
 TAPE *TAPE::get_tape(){
-  if (instance == NULL){
-    instance = new TAPE() ;
-  }
-  return instance ;
+  return &instance ;
 }
 
 

@@ -1,4 +1,4 @@
-GCC_ARGS = -Wno-return-type 
+GCC_ARGS = -g -O0 -Wno-return-type 
 LIBS = -lstdc++
 SOURCE = TAPE.cpp MCONFIG.cpp MACHINE.cpp MFUNCTIONS.cpp
 

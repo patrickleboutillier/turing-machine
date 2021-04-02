@@ -2,6 +2,7 @@
 #define LAMBDA_H
 
 #include <stdio.h>
+#include <string.h>
 
 #define MAX(a,b) ((a) > (b) ? a : b)
 
@@ -16,7 +17,7 @@ void storeOut(MCONFIG mc) ;
 
 // Lambda contains most of the lambda management code and can be used
 // directly in external code.
-template <typename Out> class Lambda {
+class Lambda {
   public:
     Lambda() : lambda(nullptr), helper(nullptr){
       NB_LAMBDA++ ;
@@ -25,7 +26,7 @@ template <typename Out> class Lambda {
       MAX_SIZE_LAMBDA = MAX(MAX_SIZE_LAMBDA, SIZE_LAMBDA) ;
     }
 
-    Lambda(Lambda<Out> const &other) : 
+    Lambda(Lambda const &other) : 
         lambda(other.helper ? other.helper(other.lambda, 'c', '\0') : nullptr),
         helper(other.helper){
       NB_LAMBDA++ ;
@@ -52,14 +53,14 @@ template <typename Out> class Lambda {
       }
     }
 
-    Lambda<Out> &operator =(Lambda<Out> const &other){
+    Lambda &operator =(Lambda const &other){
       if (this->lambda != nullptr) helper(this->lambda, 'd', '\0') ;
       this->lambda = other.helper ? other.helper(other.lambda, 'c', '\0') : nullptr;
       this->helper = other.helper;
       return *this;
     }
 
-    template<typename T> Lambda<Out> &operator =(T const &lambda){
+    template<typename T> Lambda &operator =(T const &lambda){
       copy(lambda);
       return *this;
     }
@@ -76,7 +77,6 @@ template <typename Out> class Lambda {
     template<typename T> void copy(T const &lambda){
       if (this->lambda != nullptr) helper(this->lambda, 'd', '\0') ;
       this->lambda = new T(lambda);
-      
       helper = [](void *lambda, char h, char s) -> void * {
         switch (h){
           case 's' : {
@@ -84,8 +84,9 @@ template <typename Out> class Lambda {
             // printf("size: %ld\n", size) ;
             return (void *)size ;
           }
-          case 'd' :
+          case 'd' : { 
             delete (T *)lambda ; return nullptr ;
+          }
           case 'c':
             return lambda ? new T(*(T *)lambda) : nullptr ;
           case 'e':

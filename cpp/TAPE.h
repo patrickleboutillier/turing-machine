@@ -2,17 +2,16 @@
 #define TAPE_H
 
 
-#define TAPE_LEN 512
+#define TAPE_LEN 64
 
 
 class TAPE {
   private:
-    static TAPE *instance ;
     char _squares[TAPE_LEN] ;
     int _pos ;
     int _max_pos ;
-    TAPE() ;
   public:
+    TAPE() ;
     static TAPE *get_tape() ;
     void blank() ;
     void init(const char *tape) ;
