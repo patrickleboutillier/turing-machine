@@ -23,7 +23,7 @@ void TAPE::blank(){
   }
   _squares[TAPE_LEN-1] = '\0' ;
   _pos = 1 ;
-  _max_pos = 1 ;
+  _max_pos = _pos ;
 }
 
 
@@ -31,6 +31,7 @@ void TAPE::init(const char *tape){
   blank() ;
   for (int i = 0 ; tape[i] != '\0' ; i++){
     _squares[_pos+i] = tape[i] ;
+    _max_pos = _pos+i ;
   }  
 }
 

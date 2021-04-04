@@ -1,6 +1,5 @@
 #include "TAPE.h"
 #include "MCONFIG.h"
-#include "Lambda.h"
 #include "MACHINE.h"
 #include "PRINT.h"
 #include <stdlib.h>
@@ -11,18 +10,16 @@
 // #include "TATp84.h"
 // #include "TATp87.h"
 // #include "TATp150.h"
-#include "U.h"
+// #include "U.h"
 
 
 void status(){
-    PRINT::print("size of Lambda: ") ;
-    PRINT::print((int)sizeof(Lambda)) ;
+    PRINT::print("size of MCONFIG: ") ;
+    PRINT::print((int)sizeof(MCONFIG)) ;
     PRINT::print("\n") ;
-    PRINT::print(NB_LAMBDA) ;
-    PRINT::print(" Lambda (max ") ;
-    PRINT::print(MAX_LAMBDA) ; 
-    PRINT::print(", max_size ") ;   
-    PRINT::print(MAX_SIZE_LAMBDA) ; 
+    PRINT::print(NB_MCONFIG) ;
+    PRINT::print(" MCONFIG (max ") ;
+    PRINT::print(MAX_MCONFIG) ; 
     PRINT::print(")\n")  ;
 }
 
@@ -38,27 +35,24 @@ int main(int argc, char *argv[]) {
 
     status() ;
     {
-        //TAPE::get_tape()->blank() ;
-        //PRINT::print("TATp81 run:\t") ;
-        //TATp81::m.run(1) ;
-        //TAPE::get_tape()->blank() ;
-        //PRINT::print("TATp81f run:\t") ;
-        //TATp81f::m.run(20) ;
+        TAPE::get_tape()->blank() ;
+        PRINT::print("TATp81 run:\t") ;
+        delete TATp81::m.run(20) ;
+        TAPE::get_tape()->blank() ;
+        PRINT::print("TATp81f run:\t") ;
+        delete TATp81f::m.run(20) ;
         //TAPE::get_tape()->blank() ;
         //PRINT::print("TATp150 run:\t") ;
         //TATp150::m.run(10) ;
 
-        TAPE::get_tape()->init("ee; D A D D C R D A A ; D A A D D C C R D A %") ;
+        //TAPE::get_tape()->init("ee; D A D D C R D A A ; D A A D D C C R D A %") ;
         // TAPE::get_tape()->init("ee; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A %") ;
         // TAPE::get_tape()->init("ee; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A A A A A ; D A A A A A D D C R D A A A A %") ;
         // TAPE::get_tape()->init("ee; D A D D C C C L D A A ; D A D C D C R D A ; D A D C C D C C R D A ; D A D C C C D C C C R D A ; D A D C C C C D C C C C R D A ; D A A D C C C C D C C C C L D A A A ; D A A D C D C L D A A ; D A A D C C D C C L D A A ; D A A D C C C D C C C L D A A ; D A A D D L D A A ; D A A A D C C C D C C R D A ; D A A A D C D C R D A A A A ; D A A A D C C D C C L D A A A ; D A A A D C C C C D C C C C L D A A A ; D A A A D D L D A A A ; D A A A A D C C C C D C R D A A A A A ; D A A A A D C D C R D A A A A ; D A A A A D C C D C C R D A A A A ; D A A A A D C C C D C C C R D A A A A ; D A A A A D D R D A A A A ; D A A A A A D D C C C C R D A ; D A A A A A D C D C R D A A A A A ; D A A A A A D C C D C C R D A A A A A ; D A A A A A D C C C D C C C R D A A A A A ; D A A A A A D C C C C D C C C C R D A A A A A %") ;
-        PRINT::print("U(TATp150) run:\t") ;
-        MACHINE m(TAPE::get_tape(), U::b) ;
-        m.run(steps) ;
+        //PRINT::print("U(TATp150) run:\t") ;
+        //MACHINE m(U::b.clone()) ;
+        //m.run(steps) ;
     }
     status() ;
 
 }
-
-
-// "ee; D A D D C R D A A ; D A A D D C C R D A %"

@@ -3,19 +3,19 @@
 namespace U {
 
 
-MC con(MC C, char a), con1(MC C, char a), con2(MC C, char a) ;
+MC *con(MC *C, char a), *con1(MC *C, char a), *con2(MC *C, char a) ;
 
 
 // page 152
-MC con(MC C, char a){
-  return MC([C, a](char s){
+MC *con(MC *C, char a){
+  return new MfMs(C, a, [](MC *C, char a, char s){
     NOT(s, 'A', ">>", con(C, a)) ;
     const char ops[] = {'<', a, '>', '\0'} ;
     SYM(s, 'A', ops,  con1(C, a)) ;
   }) ;
 }
-MC con1(MC C, char a){
-  return MC([C, a](char s){
+MC *con1(MC *C, char a){
+  return new MfMs(C, a, [](MC *C, char a, char s){
     const char ops[] = {'>', a, '>', '\0'} ;
     SYM(s, 'A', ops, con1(C, a)) ;
     SYM(s, 'D', ops, con2(C, a)) ;
@@ -23,8 +23,8 @@ MC con1(MC C, char a){
     NONE(s, ops2, C) ;
   }) ;
 } 
-MC con2(MC C, char a){
-  return MC([C, a](char s){
+MC *con2(MC *C, char a){
+  return new MfMs(C, a, [](MC *C, char a, char s){
     const char ops[] = {'>', a, '>', '\0'} ;
     SYM(s, 'C', ops,  con2(C, a)) ;
     NOT(s, 'C', ">>", C) ;
@@ -33,36 +33,38 @@ MC con2(MC C, char a){
 }
 
 
-extern MC b, b1, anf, anf1, kom, kmp, sim, sim1, sim2, sim3, 
-  mk, mk1, mk2, mk3, mk4, mk5, sh, sh1, sh2, sh3, sh4, sh5, inst, inst1, ov ;
+extern MC b, b1, anf, anf1, kom ;
+//, kmp, sim, sim1, sim2, sim3, mk, mk1, mk2, mk3, mk4, mk5, sh, sh1, sh2, sh3, sh4, sh5, inst, inst1, ov ;
 
 
 // page 153
 MC b([](char s){
-  BLANK(s, "", f(b1, b1, '%')) ;
+  BLANK(s, "", f(&b1, &b1, '%')) ;
 }) ;
 MC b1([](char s){
   const char ops[] = {'>', '>', ':', '>', '>', 'D', '>', '>', 'A', '\0'} ;
-  BLANK(s, ops, anf) ;
+  BLANK(s, ops, anf.clone()) ;
 }) ;
 
 // page 154
 MC anf([](char s){
-  BLANK(s, "", g_2(anf1, ':')) ;
+  BLANK(s, "", g(&anf1, ':')) ;
 }) ;
 MC anf1([](char s){
-  BLANK(s, "", con(kom, 'y')) ;
+  BLANK(s, "", con(&kom, 'y')) ;
 }) ;
 
 MC kom([](char s){
-  SYM(s, ';', ">z<", con(kmp, 'x')) ;
-  SYM(s, 'z', "<<",  kom) ;
-  NONE(s,     "<",   kom) ; 
-  ANY(s,      "<",   kom) ;
+  // SYM(s, ';', ">z<", con(&kmp, 'x')) ;
+  SYM(s, 'z', "<<",  kom.clone()) ;
+  NONE(s,     "<",   kom.clone()) ; 
+  ANY(s,      "<",   kom.clone()) ;
 }) ;
 
+
+/*
 MC kmp([](char s){
-  BLANK(s, "", cpe_4(e(e(anf, 'x'), 'y'), sim, 'x', 'y')) ;
+  BLANK(s, "", cpe(e(e(anf, 'x'), 'y'), sim, 'x', 'y')) ;
 }) ;
 
 MC sim([](char s){
@@ -82,7 +84,7 @@ MC sim3([](char s){
 
 
 MC mk([](char s){
-  BLANK(s, "", g_2(mk1, ':')) ;
+  BLANK(s, "", g(mk1, ':')) ;
 }) ;
 MC mk1([](char s){
   NOT(s, 'A', ">>",   mk1) ;
@@ -132,7 +134,7 @@ MC sh5([](char s){
 
 // page 160
 MC inst([](char s){
-  BLANK(s, "", g_2(l(inst1), 'u')) ;
+  BLANK(s, "", g(l(inst1), 'u')) ;
 }) ;
 MC inst1([](char s){
   SYM(s, 'L', "> ", ce5(ov, 'v', 'y', 'x', 'u', 'w')) ;
@@ -145,18 +147,6 @@ MC ov([](char s){
 }) ;
 
 
-/*
-                 
--- page 160
-inst  = "inst"  ==> [Blank          []                      $ g'2 (l (inst1), "u")]
-
-inst1 = "inst1" ==> [Sym "L"        [R, E]                  $ ce5 (ov, "v", "y", "x", "u", "w"),
-                     Sym "R"        [R, E]                  $ ce5 (ov, "v", "x", "u", "y", "w"),
-                     Sym "N"        [R, E]                  $ ce5 (ov, "v", "x", "y", "u", "w")]
-                     
-ov    = "ov"    ==> [Blank          []                      $ e'1 (anf)]
-
- */
-
+*/
 
 } ;

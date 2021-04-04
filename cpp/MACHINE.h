@@ -7,14 +7,12 @@
 
 class MACHINE {
   private:
-    TAPE *_tape ;
-    MCONFIG _begin ;
-    void _run(int steps, bool step) ;
+    MCONFIG &_begin ;
+    MC _run(int steps, bool step) ;
   public:
-    MACHINE(TAPE *tape, MC begin) ;
-    TAPE *get_tape() ;
-    void run(int steps) ;
-    void step(int steps) ;
+    MACHINE(MCONFIG &begin) ;
+    MC run(int steps) ;
+    MC step(int steps) ;
 } ;
 
 

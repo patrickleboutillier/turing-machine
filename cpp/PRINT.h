@@ -15,6 +15,9 @@ class PRINT {
     static void print(int i){
         printf("%d", i) ;
     }
+    static void print(long l){
+        printf("%ld", l) ;
+    }
 } ;
 
 

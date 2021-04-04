@@ -1,9 +1,9 @@
 #ifndef MCONFIG_H
 #define MCONFIG_H
 
-#include "Lambda.h"
 #include "TAPE.h"
 #include "PRINT.h"
+
 
 // Symbol specifiers
 #define     _BLANK     '*'
@@ -13,7 +13,7 @@
 #define     _NOT(s)    (-s)
 
 
-#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ TAPE::get_tape()->apply_ops(ops) ; return fmc ; }
+#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ TAPE::get_tape()->apply_ops(ops) ; return (*fmc)() ; }
 #define BLANK(s, ops, fmc)       _RULE(_BLANK, s, ops, fmc)
 #define NONE(s, ops, fmc)        _RULE(_NONE, s, ops, fmc)
 #define ANY(s, ops, fmc)         _RULE(_ANY, s, ops, fmc)
@@ -22,21 +22,31 @@
 #define DONE(s)                   { PRINT::print(s) ; PRINT::print("\n") ; }
 
 
+class MCONFIG ;
+typedef MCONFIG* MC ;
+
+
+typedef MC(*MCf)(char) ;
+
 
 class MCONFIG {
-  private:
-    Lambda _f ;
+  protected:
+    MCf f ;
   public:
-    MCONFIG(){} ;
-    MCONFIG(MCONFIG const &other) : _f(other._f){} ; 
-    MCONFIG &operator =(MCONFIG const &other){ _f = other._f ; return *this ; } ;
-    MCONFIG(Lambda) ;
+    MCONFIG(MCf f) ;
+    virtual MC clone() ;
+    virtual ~MCONFIG() ;
     static bool matches(char ss, char s) ;
-    MCONFIG operator()(char s) ;
+    virtual MC operator()(char s) ;
+    virtual MC operator()() ;
+    static MC move(MC mc, char s) ;
 } ;
 
 
-typedef MCONFIG MC ;
+extern long NB_MCONFIG ;
+extern long MAX_MCONFIG ;
+extern long SIZE_MCONFIG ;
+extern long MAX_SIZE_MCONFIG ;
 
 
 #endif

@@ -2,45 +2,37 @@
 #include "PRINT.h"
 
 
-MACHINE::MACHINE(TAPE *tape, MCONFIG begin) : _begin(begin) {
-  _tape = tape ;
+MACHINE::MACHINE(MCONFIG &begin) : _begin(begin) {
 }
 
 
-TAPE *MACHINE::get_tape(){
-  return _tape ;
+MC MACHINE::run(int steps){
+  return _run(steps, false) ;
 }
 
 
-void MACHINE::run(int steps){
-  _run(steps, false) ;
+MC MACHINE::step(int steps){
+  return _run(steps, true) ;
 }
 
 
-void MACHINE::step(int steps){
-  _run(steps, true) ;
-}
-
-
-void MACHINE::_run(int steps, bool step){
+MC MACHINE::_run(int steps, bool step){
   int n = 0 ;
-  MCONFIG mc = _begin ;
+  MC mc = _begin.clone() ;
 
   while (1) {
     n++ ;
     if (n >= steps){
       PRINT::print(n) ;
-      _tape->print("?") ;
-      return ;
+      TAPE::get_tape()->print("?") ;
+      return mc ;
     }
     if (step){
       PRINT::print(n) ;
-      _tape->print("?") ; 
-      if (n >= (steps - 10)){
-      }
+      TAPE::get_tape()->print("?") ; 
     }
 
-    char s = _tape->scan() ;
-    mc = mc(s) ;
+    char s = TAPE::get_tape()->scan() ;
+    mc = MCONFIG::move(mc, s) ;
   }
 }

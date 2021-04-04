@@ -1,24 +1,31 @@
 #include "MCONFIG.h"
 #include <string.h>
 
+
 #define MAX(a,b) ((a) > (b) ? a : b)
 
-int NB_LAMBDA = 0 ;
-int MAX_LAMBDA = 0 ;
-int SIZE_LAMBDA = 0 ;
-int MAX_SIZE_LAMBDA = 0 ;
 
-MC buf ;
+long NB_MCONFIG = 0 ;
+long MAX_MCONFIG = 0 ;
+long SIZE_MCONFIG = 0 ;
+long MAX_SIZE_MCONFIG = 0 ;
 
 
-void storeOut(MCONFIG &mc){
-  buf = mc ;
+MCONFIG::MCONFIG(MCf f){
+  this->f = (MCf)f ;
+  NB_MCONFIG++ ;
+  MAX_MCONFIG = MAX(MAX_MCONFIG, NB_MCONFIG) ;
+} ;
+
+
+MC MCONFIG::clone(){
+  return new MCONFIG((MCf)f) ;
 }
 
 
-MCONFIG::MCONFIG(Lambda f) {
-  _f = f ;
-}
+MCONFIG::~MCONFIG(){
+  NB_MCONFIG-- ;
+} ;
 
 
 bool MCONFIG::matches(char ss, char s){
@@ -40,7 +47,20 @@ bool MCONFIG::matches(char ss, char s){
 }
 
 
-MCONFIG MCONFIG::operator()(char s){     
-  _f(s) ;
-  return buf ;
+MC MCONFIG::operator()(char s){  
+  MCf f = (MCf)this->f ;
+  return f(s) ;
+}
+
+
+MC MCONFIG::operator()(){
+  return clone() ;  
+}
+
+
+MC MCONFIG::move(MC mc, char s){
+  MC o = mc ;
+  MC n = (*o)(s) ;
+  delete o ;
+  return n ;
 }
