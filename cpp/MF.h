@@ -57,6 +57,46 @@ class MFMs : public MFM {
 } ;
 
 
+class MFMss : public MFMs {
+  protected:
+    char b ;
+  public:
+    MFMss(MC A, char a, char b, MCfMss f) : MFMs(A, a, (MCfMs)f) { this->b = b ;} ;
+    virtual MC clone(){ return new MFMss(A, a, b, (MCfMss)f) ; }
+    virtual MC operator()(char s) { return ((MCfMss)f)(A, a, b, s) ; } ;
+} ;
+
+
+class MFMsss : public MFMss {
+  protected:
+    char c ;
+  public:
+    MFMsss(MC A, char a, char b, char c, MCfMsss f) : MFMss(A, a, b, (MCfMss)f) { this->c = c ;} ;
+    virtual MC clone(){ return new MFMsss(A, a, b, c, (MCfMsss)f) ; }
+    virtual MC operator()(char s) { return ((MCfMsss)f)(A, a, b, c, s) ; } ;
+} ;
+
+
+class MFMssss : public MFMsss {
+  protected:
+    char d ;
+  public:
+    MFMssss(MC A, char a, char b, char c, char d, MCfMssss f) : MFMsss(A, a, b, c, (MCfMsss)f) { this->d = d ;} ;
+    virtual MC clone(){ return new MFMssss(A, a, b, c, d, (MCfMssss)f) ; }
+    virtual MC operator()(char s) { return ((MCfMssss)f)(A, a, b, c, d, s) ; } ;
+} ;
+
+
+class MFMsssss : public MFMssss {
+  protected:
+    char e ;
+  public:
+    MFMsssss(MC A, char a, char b, char c, char d, char e, MCfMsssss f) : MFMssss(A, a, b, c, d, (MCfMssss)f) { this->e = e ;} ;
+    virtual MC clone(){ return new MFMsssss(A, a, b, c, d, e, (MCfMsssss)f) ; }
+    virtual MC operator()(char s) { return ((MCfMsssss)f)(A, a, b, c, d, e, s) ; } ;
+} ;
+
+
 class MFMMs : public MFM {
   protected:
     MC B ;
@@ -76,6 +116,20 @@ class MFMMss : public MFMMs {
     MFMMss(MC A, MC B, char a, char b, MCfMMss f) : MFMMs(A, B, a, (MCfMMs)f) { this->b = b ; } ;
     virtual MC clone(){ return new MFMMss(A, B, a, b, (MCfMMss)f) ; }
     virtual MC operator()(char s) { return ((MCfMMss)f)(A, B, a, b, s) ; } ;
+} ;
+
+
+class MFMMMss : public MFM {
+  protected:
+    MC B ;
+    MC C ;
+    char a ;
+    char b ;
+  public:
+    MFMMMss(MC A, MC B, MC C, char a, char b, MCfMMMss f) : MFM(A, (MCfM)f) { this->B = B->clone() ; this->C = C->clone() ; this->a = a ; this->b = b ; } ;
+    virtual MC clone(){ return new MFMMMss(A, B, C, a, b, (MCfMMMss)f) ; }
+    virtual ~MFMMMss() { delete B ; delete C ; } ;
+    virtual MC operator()(char s) { return ((MCfMMMss)f)(A, B, C, a, b, s) ; } ;
 } ;
 
 

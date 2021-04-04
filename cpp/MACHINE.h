@@ -7,10 +7,10 @@
 
 class MACHINE {
   private:
-    MCONFIG &_begin ;
+    MC _begin ;
     MC _run(int steps, bool step) ;
   public:
-    MACHINE(MCONFIG &begin) ;
+    MACHINE(MC begin) ;
     MC run(int steps) ;
     MC step(int steps) ;
 } ;

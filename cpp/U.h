@@ -3,19 +3,19 @@
 namespace U {
 
 
-MC *con(MC *C, char a), *con1(MC *C, char a), *con2(MC *C, char a) ;
+MC con(MC C, char a), con1(MC C, char a), con2(MC C, char a) ;
 
 
 // page 152
-MC *con(MC *C, char a){
-  return new MfMs(C, a, [](MC *C, char a, char s){
+MC con(MC C, char a){
+  return MF(C, a, [](MC C, char a, char s){
     NOT(s, 'A', ">>", con(C, a)) ;
     const char ops[] = {'<', a, '>', '\0'} ;
     SYM(s, 'A', ops,  con1(C, a)) ;
   }) ;
 }
-MC *con1(MC *C, char a){
-  return new MfMs(C, a, [](MC *C, char a, char s){
+MC con1(MC C, char a){
+  return MF(C, a, [](MC C, char a, char s){
     const char ops[] = {'>', a, '>', '\0'} ;
     SYM(s, 'A', ops, con1(C, a)) ;
     SYM(s, 'D', ops, con2(C, a)) ;
@@ -23,8 +23,8 @@ MC *con1(MC *C, char a){
     NONE(s, ops2, C) ;
   }) ;
 } 
-MC *con2(MC *C, char a){
-  return new MfMs(C, a, [](MC *C, char a, char s){
+MC con2(MC C, char a){
+  return MF(C, a, [](MC C, char a, char s){
     const char ops[] = {'>', a, '>', '\0'} ;
     SYM(s, 'C', ops,  con2(C, a)) ;
     NOT(s, 'C', ">>", C) ;
@@ -33,120 +33,116 @@ MC *con2(MC *C, char a){
 }
 
 
-extern MC b, b1, anf, anf1, kom ;
-//, kmp, sim, sim1, sim2, sim3, mk, mk1, mk2, mk3, mk4, mk5, sh, sh1, sh2, sh3, sh4, sh5, inst, inst1, ov ;
+extern MCONFIG b, b1, anf, anf1, kom, kmp, sim, sim1, sim2, sim3, mk, mk1, mk2, mk3, mk4, mk5, sh, sh1, sh2, sh3, sh4, sh5, inst, inst1, ov ;
 
 
 // page 153
-MC b([](char s){
+MCONFIG b([](char s){
   BLANK(s, "", f(&b1, &b1, '%')) ;
 }) ;
-MC b1([](char s){
+MCONFIG b1([](char s){
   const char ops[] = {'>', '>', ':', '>', '>', 'D', '>', '>', 'A', '\0'} ;
-  BLANK(s, ops, anf.clone()) ;
+  BLANK(s, ops, &anf) ;
 }) ;
 
 // page 154
-MC anf([](char s){
+MCONFIG anf([](char s){
   BLANK(s, "", g(&anf1, ':')) ;
 }) ;
-MC anf1([](char s){
+MCONFIG anf1([](char s){
   BLANK(s, "", con(&kom, 'y')) ;
 }) ;
 
-MC kom([](char s){
+MCONFIG kom([](char s){
   // SYM(s, ';', ">z<", con(&kmp, 'x')) ;
-  SYM(s, 'z', "<<",  kom.clone()) ;
-  NONE(s,     "<",   kom.clone()) ; 
-  ANY(s,      "<",   kom.clone()) ;
+  SYM(s, 'z', "<<",  &kom) ;
+  NONE(s,     "<",   &kom) ; 
+  ANY(s,      "<",   &kom) ;
 }) ;
 
 
-/*
-MC kmp([](char s){
-  BLANK(s, "", cpe(e(e(anf, 'x'), 'y'), sim, 'x', 'y')) ;
+MCONFIG kmp([](char s){
+  BLANK(s, "", cpe(e(e(&anf, 'x'), 'y'), &sim, 'x', 'y')) ;
 }) ;
 
-MC sim([](char s){
-  BLANK(s, "", fl(sim1, sim1, 'z')) ;
+MCONFIG sim([](char s){
+  BLANK(s, "", fl(&sim1, &sim1, 'z')) ;
 }) ;
-MC sim1([](char s){
-  BLANK(s, "", con(sim2, ' ')) ;
+MCONFIG sim1([](char s){
+  BLANK(s, "", con(&sim2, ' ')) ;
 }) ;
-MC sim2([](char s){
-  SYM(s, 'A', "",      sim3) ;
-  NOT(s, 'A', "<u>>>", sim2) ;
+MCONFIG sim2([](char s){
+  SYM(s, 'A', "",      &sim3) ;
+  NOT(s, 'A', "<u>>>", &sim2) ;
 }) ;
-MC sim3([](char s){
-  NOT(s, 'A', "<y",    e(mk, 'z')) ;
-  SYM(s, 'A', "<y>>>", sim3) ;
-}) ;
-
-
-MC mk([](char s){
-  BLANK(s, "", g(mk1, ':')) ;
-}) ;
-MC mk1([](char s){
-  NOT(s, 'A', ">>",   mk1) ;
-  SYM(s, 'A', "<<<<", mk2) ;
-}) ;
-MC mk2([](char s){
-  SYM(s, 'C', ">x<<<", mk2) ;
-  SYM(s, ':', "",      mk4) ;
-  SYM(s, 'D', ">x<<<", mk3) ;
-}) ;
-MC mk3([](char s){
-  NOT(s, ':', ">v<<<", mk3) ;
-  SYM(s, ':', "",      mk4) ;
-}) ;
-MC mk4([](char s){
-  BLANK(s, "", con(l(l(mk5)), ' ')) ;
-}) ;
-MC mk5([](char s){
-  ANY(s, ">w>", mk5) ;
-  NONE(s, ":", sh) ;
+MCONFIG sim3([](char s){
+  NOT(s, 'A', "<y",    e(&mk, 'z')) ;
+  SYM(s, 'A', "<y>>>", &sim3) ;
 }) ;
 
 
-MC sh([](char s){
-  BLANK(s, "", f(sh1, inst, 'u')) ;
+MCONFIG mk([](char s){
+  BLANK(s, "", g(&mk1, ':')) ;
 }) ;
-MC sh1([](char s){
-  BLANK(s, "<<<", sh2) ;
+MCONFIG mk1([](char s){
+  NOT(s, 'A', ">>",   &mk1) ;
+  SYM(s, 'A', "<<<<", &mk2) ;
 }) ;
-MC sh2([](char s){
-  SYM(s, 'D', ">>>>", sh3) ;
-  NOT(s, 'D', "",     inst) ;
+MCONFIG mk2([](char s){
+  SYM(s, 'C', ">x<<<", &mk2) ;
+  SYM(s, ':', "",      &mk4) ;
+  SYM(s, 'D', ">x<<<", &mk3) ;
 }) ;
-MC sh3([](char s){
-  SYM(s, 'C', ">>", sh4) ;
-  NOT(s, 'C', "",  inst) ;
+MCONFIG mk3([](char s){
+  NOT(s, ':', ">v<<<", &mk3) ;
+  SYM(s, ':', "",      &mk4) ;
 }) ;
-MC sh4([](char s){
-  SYM(s, 'C', ">>", sh5) ;
-  NOT(s, 'C', "",   pe2(inst, '0', ':')) ; 
+MCONFIG mk4([](char s){
+  BLANK(s, "", con(l(l(&mk5)), ' ')) ;
 }) ;
-MC sh5([](char s){
-  SYM(s, 'C', "", inst) ;
-  NOT(s, 'C', "", pe2(inst, '1', ':')) ;
+MCONFIG mk5([](char s){
+  ANY(s, ">w>", &mk5) ;
+  NONE(s, ":", &sh) ;
+}) ;
+
+
+MCONFIG sh([](char s){
+  BLANK(s, "", f(&sh1, &inst, 'u')) ;
+}) ;
+MCONFIG sh1([](char s){
+  BLANK(s, "<<<", &sh2) ;
+}) ;
+MCONFIG sh2([](char s){
+  SYM(s, 'D', ">>>>", &sh3) ;
+  NOT(s, 'D', "",     &inst) ;
+}) ;
+MCONFIG sh3([](char s){
+  SYM(s, 'C', ">>", &sh4) ;
+  NOT(s, 'C', "",  &inst) ;
+}) ;
+MCONFIG sh4([](char s){
+  SYM(s, 'C', ">>", &sh5) ;
+  NOT(s, 'C', "",   pe2(&inst, '0', ':')) ; 
+}) ;
+MCONFIG sh5([](char s){
+  SYM(s, 'C', "", &inst) ;
+  NOT(s, 'C', "", pe2(&inst, '1', ':')) ;
 }) ;
 
 
 // page 160
-MC inst([](char s){
-  BLANK(s, "", g(l(inst1), 'u')) ;
+MCONFIG inst([](char s){
+  BLANK(s, "", g(l(&inst1), 'u')) ;
 }) ;
-MC inst1([](char s){
-  SYM(s, 'L', "> ", ce5(ov, 'v', 'y', 'x', 'u', 'w')) ;
-  SYM(s, 'R', "> ", ce5(ov, 'v', 'x', 'u', 'y', 'w')) ;
-  SYM(s, 'N', "> ", ce5(ov, 'v', 'x', 'y', 'u', 'w')) ;
-}) ;
-
-MC ov([](char s){
-  BLANK(s, "", e(anf)) ;
+MCONFIG inst1([](char s){
+  SYM(s, 'L', "> ", ce5(&ov, 'v', 'y', 'x', 'u', 'w')) ;
+  SYM(s, 'R', "> ", ce5(&ov, 'v', 'x', 'u', 'y', 'w')) ;
+  SYM(s, 'N', "> ", ce5(&ov, 'v', 'x', 'y', 'u', 'w')) ;
 }) ;
 
+MCONFIG ov([](char s){
+  BLANK(s, "", e(&anf)) ;
+}) ;
 
-*/
 
 } ;

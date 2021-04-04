@@ -2,7 +2,7 @@
 #include "PRINT.h"
 
 
-MACHINE::MACHINE(MCONFIG &begin) : _begin(begin) {
+MACHINE::MACHINE(MC begin) : _begin(begin) {
 }
 
 
@@ -18,7 +18,7 @@ MC MACHINE::step(int steps){
 
 MC MACHINE::_run(int steps, bool step){
   int n = 0 ;
-  MC mc = _begin.clone() ;
+  MC mc = (*_begin)() ;
 
   while (1) {
     n++ ;

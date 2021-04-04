@@ -18,6 +18,6 @@ MCONFIG f([](char s){
 }) ;
 
 
-MACHINE m(b) ;
+MACHINE m(&b) ;
 
 } ;
