@@ -10,21 +10,27 @@ long MAX_MCONFIG = 0 ;
 long SIZE_MCONFIG = 0 ;
 long MAX_SIZE_MCONFIG = 0 ;
 
+#define STATS_SIZE 128
+char STATS[STATS_SIZE] ;
+char MAX_STATS[STATS_SIZE] ;
+
 
 MCONFIG::MCONFIG(MCf f){
   this->f = (MCf)f ;
-  NB_MCONFIG++ ;
-  MAX_MCONFIG = MAX(MAX_MCONFIG, NB_MCONFIG) ;
 } ;
 
 
+int MCONFIG::size(){
+  return sizeof(*this) ;
+}
+
+
 MC MCONFIG::clone(){
-  return new MCONFIG((MCf)f) ;
+  return count(new MCONFIG((MCf)f)) ;
 }
 
 
 MCONFIG::~MCONFIG(){
-  NB_MCONFIG-- ;
 } ;
 
 
@@ -53,14 +59,53 @@ MC MCONFIG::operator()(char s){
 }
 
 
-MC MCONFIG::operator()(){
-  return clone() ;  
-}
-
-
 MC MCONFIG::move(MC mc, char s){
   MC o = mc ;
   MC n = (*o)(s) ;
-  delete o ;
+  delete uncount(o) ;
   return n ;
+}
+
+
+MC MCONFIG::count(MC mc){
+  NB_MCONFIG++ ;
+  MAX_MCONFIG = MAX(MAX_MCONFIG, NB_MCONFIG) ;
+  int s = mc->size() ;
+  SIZE_MCONFIG += s ;
+  STATS[s]++ ;
+
+  if (SIZE_MCONFIG > MAX_SIZE_MCONFIG){
+    MAX_SIZE_MCONFIG = SIZE_MCONFIG ;
+    memcpy(MAX_STATS, STATS, STATS_SIZE) ;
+  }
+
+  return mc ;
+}
+
+
+MC MCONFIG::uncount(MC mc){
+  NB_MCONFIG-- ;
+  int s = mc->size() ;
+  SIZE_MCONFIG -= s ;
+  STATS[s]-- ;
+  return mc ;
+}
+
+
+void stats(){
+  PRINT::print(NB_MCONFIG) ;
+  PRINT::print(" MCONFIG (max:") ;
+  PRINT::print(MAX_MCONFIG) ; 
+  PRINT::print(", max size:") ;
+  PRINT::print(MAX_SIZE_MCONFIG) ; 
+  PRINT::print(", histo:")  ;
+  for (int i = 0 ; i < STATS_SIZE ; i++){
+    if (MAX_STATS[i] != 0){
+        PRINT::print((int)MAX_STATS[i]) ;
+        PRINT::print("@") ;
+        PRINT::print(i)  ;
+        PRINT::print(",") ;
+    }  
+  }
+  PRINT::print(")\n")  ;
 }

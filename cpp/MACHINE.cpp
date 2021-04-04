@@ -18,7 +18,7 @@ MC MACHINE::step(int steps){
 
 MC MACHINE::_run(int steps, bool step){
   int n = 0 ;
-  MC mc = (*_begin)() ;
+  MC mc = _begin->clone() ;
 
   while (1) {
     n++ ;
@@ -29,7 +29,8 @@ MC MACHINE::_run(int steps, bool step){
     }
     if (step){
       PRINT::print(n) ;
-      TAPE::get_tape()->print("?") ; 
+      TAPE::get_tape()->print("?") ;
+      stats() ; 
     }
 
     char s = TAPE::get_tape()->scan() ;

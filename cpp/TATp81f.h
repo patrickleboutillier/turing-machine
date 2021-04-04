@@ -16,7 +16,7 @@ MC j(MC C, char a){
 // i x@(mC)    = "i"%x  ==> [Var           $ (\s -> j (mC, s)) ]
 MC i(MC C){
   return MF(C, [](MC C, char s){
-    return j(C, s) ;
+    return j(C, s)->clone() ;
   }) ;
 }
 

@@ -13,7 +13,7 @@
 #define     _NOT(s)    (-s)
 
 
-#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ TAPE::get_tape()->apply_ops(ops) ; return (*fmc)() ; }
+#define _RULE(ss, s, ops, fmc)   if (MCONFIG::matches(ss, s)){ TAPE::get_tape()->apply_ops(ops) ; return (fmc)->clone() ; }
 #define BLANK(s, ops, fmc)       _RULE(_BLANK, s, ops, fmc)
 #define NONE(s, ops, fmc)        _RULE(_NONE, s, ops, fmc)
 #define ANY(s, ops, fmc)         _RULE(_ANY, s, ops, fmc)
@@ -34,12 +34,14 @@ class MCONFIG {
     MCf f ;
   public:
     MCONFIG(MCf f) ;
+    virtual int size() ;
     virtual MC clone() ;
     virtual ~MCONFIG() ;
     static bool matches(char ss, char s) ;
     virtual MC operator()(char s) ;
-    virtual MC operator()() ;
     static MC move(MC mc, char s) ;
+    static MC count(MC mc) ;
+    static MC uncount(MC mc) ;
 } ;
 
 
@@ -47,6 +49,7 @@ extern long NB_MCONFIG ;
 extern long MAX_MCONFIG ;
 extern long SIZE_MCONFIG ;
 extern long MAX_SIZE_MCONFIG ;
+extern void stats() ;
 
 
 #endif

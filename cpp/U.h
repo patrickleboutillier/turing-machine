@@ -54,7 +54,7 @@ MCONFIG anf1([](char s){
 }) ;
 
 MCONFIG kom([](char s){
-  // SYM(s, ';', ">z<", con(&kmp, 'x')) ;
+  SYM(s, ';', ">z<", con(&kmp, 'x')) ;
   SYM(s, 'z', "<<",  &kom) ;
   NONE(s,     "<",   &kom) ; 
   ANY(s,      "<",   &kom) ;

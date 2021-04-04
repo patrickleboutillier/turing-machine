@@ -89,7 +89,7 @@ MC c(MC C, MC B, char a){
 }
 MC c1(MC C){ 
   return MF(C, [](MC C, char s){
-    return pe(C, s) ;
+    return pe(C, s)->clone() ;
   }) ;
 }
 
@@ -144,7 +144,7 @@ MC cp(MC C, MC U, MC E, char a, char b){
 } 
 MC cp1(MC C, MC U, char b){
   return MF(C, U, b, [](MC C, MC U, char b, char s){
-    return fl(cp2(C, U, s), U, b) ;
+    return fl(cp2(C, U, s), U, b)->clone() ;
   }) ;
 }
 MC cp2(MC C, MC U, char y){

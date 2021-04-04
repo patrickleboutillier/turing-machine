@@ -13,17 +13,6 @@
 #include "U.h"
 
 
-void status(){
-    PRINT::print("size of MCONFIG: ") ;
-    PRINT::print((int)sizeof(MCONFIG)) ;
-    PRINT::print("\n") ;
-    PRINT::print(NB_MCONFIG) ;
-    PRINT::print(" MCONFIG (max ") ;
-    PRINT::print(MAX_MCONFIG) ; 
-    PRINT::print(")\n")  ;
-}
-
-
 int main(int argc, char *argv[]) {
     int steps = 0 ;
     if (argc > 1){
@@ -33,14 +22,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    status() ;
+    stats() ;
     {
         TAPE::get_tape()->blank() ;
         PRINT::print("TATp81 run:\t") ;
-        delete TATp81::m.run(20) ;
+        delete MCONFIG::uncount(TATp81::m.run(20)) ;
         TAPE::get_tape()->blank() ;
         PRINT::print("TATp81f run:\t") ;
-        delete TATp81f::m.run(20) ;
+        delete MCONFIG::uncount(TATp81f::m.run(20)) ;
         //TAPE::get_tape()->blank() ;
         //PRINT::print("TATp150 run:\t") ;
         //TATp150::m.run(10) ;
@@ -51,8 +40,8 @@ int main(int argc, char *argv[]) {
         // TAPE::get_tape()->init("ee; D A D D C C C L D A A ; D A D C D C R D A ; D A D C C D C C R D A ; D A D C C C D C C C R D A ; D A D C C C C D C C C C R D A ; D A A D C C C C D C C C C L D A A A ; D A A D C D C L D A A ; D A A D C C D C C L D A A ; D A A D C C C D C C C L D A A ; D A A D D L D A A ; D A A A D C C C D C C R D A ; D A A A D C D C R D A A A A ; D A A A D C C D C C L D A A A ; D A A A D C C C C D C C C C L D A A A ; D A A A D D L D A A A ; D A A A A D C C C C D C R D A A A A A ; D A A A A D C D C R D A A A A ; D A A A A D C C D C C R D A A A A ; D A A A A D C C C D C C C R D A A A A ; D A A A A D D R D A A A A ; D A A A A A D D C C C C R D A ; D A A A A A D C D C R D A A A A A ; D A A A A A D C C D C C R D A A A A A ; D A A A A A D C C C D C C C R D A A A A A ; D A A A A A D C C C C D C C C C R D A A A A A %") ;
         PRINT::print("U(TATp150) run:\t") ;
         MACHINE m(&U::b) ;
-        delete m.run(steps) ;
+        delete MCONFIG::uncount(m.run(steps)) ;
     }
-    status() ;
-
+    free_cache() ;
+    stats() ;
 }
